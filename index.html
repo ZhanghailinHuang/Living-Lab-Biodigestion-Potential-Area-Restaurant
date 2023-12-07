@@ -1,0 +1,1868 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/filter.css">
+<link rel="stylesheet" href="css/nouislider.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/tailDT.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/wNumb.js"></script>
+        <script src="data/CityofAmsterdam_1.js"></script>
+        <script src="data/Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2.js"></script>
+        <script src="data/Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3.js"></script>
+        <script src="data/Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4.js"></script>
+        <script src="data/Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[52.38704680590365,4.907393538080795],[52.39314098000677,4.917060802427661]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'feet',
+            secondaryLengthUnit: 'miles',
+            primaryAreaUnit: 'sqfeet',
+            secondaryAreaUnit: 'sqmiles'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_OpenStreetMap_0');
+        map.getPane('pane_OpenStreetMap_0').style.zIndex = 400;
+        var layer_OpenStreetMap_0 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OpenStreetMap_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OpenStreetMap_0;
+        map.addLayer(layer_OpenStreetMap_0);
+        function pop_CityofAmsterdam_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fid</th>\
+                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">identificatie</th>\
+                        <td>' + (feature.properties['identificatie'] !== null ? autolinker.link(feature.properties['identificatie'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">naam</th>\
+                        <td>' + (feature.properties['naam'] !== null ? autolinker.link(feature.properties['naam'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">code</th>\
+                        <td>' + (feature.properties['code'] !== null ? autolinker.link(feature.properties['code'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ligtInProvincieCode</th>\
+                        <td>' + (feature.properties['ligtInProvincieCode'] !== null ? autolinker.link(feature.properties['ligtInProvincieCode'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ligtInProvincieNaam</th>\
+                        <td>' + (feature.properties['ligtInProvincieNaam'] !== null ? autolinker.link(feature.properties['ligtInProvincieNaam'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">fuuid</th>\
+                        <td>' + (feature.properties['fuuid'] !== null ? autolinker.link(feature.properties['fuuid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_CityofAmsterdam_1_0() {
+            return {
+                pane: 'pane_CityofAmsterdam_1',
+                opacity: 1,
+                color: 'rgba(53,121,177,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_CityofAmsterdam_1');
+        map.getPane('pane_CityofAmsterdam_1').style.zIndex = 401;
+        map.getPane('pane_CityofAmsterdam_1').style['mix-blend-mode'] = 'normal';
+        var layer_CityofAmsterdam_1 = new L.geoJson(json_CityofAmsterdam_1, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_CityofAmsterdam_1',
+            layerName: 'layer_CityofAmsterdam_1',
+            pane: 'pane_CityofAmsterdam_1',
+            onEachFeature: pop_CityofAmsterdam_1,
+            style: style_CityofAmsterdam_1_0,
+        });
+        bounds_group.addLayer(layer_CityofAmsterdam_1);
+        function pop_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fid</th>\
+                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Postcode6</th>\
+                        <td>' + (feature.properties['Postcode6'] !== null ? autolinker.link(feature.properties['Postcode6'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Buurtcode</th>\
+                        <td>' + (feature.properties['Buurtcode'] !== null ? autolinker.link(feature.properties['Buurtcode'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Gas demand per postcode6 /m3</th>\
+                        <td>' + (feature.properties['Gas demand per postcode6 /m3'] !== null ? autolinker.link(feature.properties['Gas demand per postcode6 /m3'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Number of restaurants</th>\
+                        <td>' + (feature.properties['Number of restaurants'] !== null ? autolinker.link(feature.properties['Number of restaurants'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Food waste produced /kg per day</th>\
+                        <td>' + (feature.properties['Food waste produced /kg per day'] !== null ? autolinker.link(feature.properties['Food waste produced /kg per day'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2_0() {
+            return {
+                pane: 'pane_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.8)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(49,104,142,0.8)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2');
+        map.getPane('pane_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2').style.zIndex = 402;
+        map.getPane('pane_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2').style['mix-blend-mode'] = 'normal';
+        var layer_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2 = new L.geoJson(json_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2',
+            layerName: 'layer_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2',
+            pane: 'pane_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2',
+            onEachFeature: pop_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2,
+            style: style_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2_0,
+        });
+        bounds_group.addLayer(layer_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2);
+        map.addLayer(layer_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2);
+        function pop_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fid</th>\
+                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Postcode6</th>\
+                        <td>' + (feature.properties['Postcode6'] !== null ? autolinker.link(feature.properties['Postcode6'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Buurtcode</th>\
+                        <td>' + (feature.properties['Buurtcode'] !== null ? autolinker.link(feature.properties['Buurtcode'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Gas demand per postcode6 /m3</th>\
+                        <td>' + (feature.properties['Gas demand per postcode6 /m3'] !== null ? autolinker.link(feature.properties['Gas demand per postcode6 /m3'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Number of restaurants</th>\
+                        <td>' + (feature.properties['Number of restaurants'] !== null ? autolinker.link(feature.properties['Number of restaurants'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Food waste produced /kg per day</th>\
+                        <td>' + (feature.properties['Food waste produced /kg per day'] !== null ? autolinker.link(feature.properties['Food waste produced /kg per day'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3_0() {
+            return {
+                pane: 'pane_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.7)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(53,183,121,0.7)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3');
+        map.getPane('pane_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3').style.zIndex = 403;
+        map.getPane('pane_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3').style['mix-blend-mode'] = 'normal';
+        var layer_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3 = new L.geoJson(json_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3',
+            layerName: 'layer_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3',
+            pane: 'pane_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3',
+            onEachFeature: pop_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3,
+            style: style_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3_0,
+        });
+        bounds_group.addLayer(layer_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3);
+        map.addLayer(layer_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3);
+        function pop_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fid</th>\
+                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Postcode6</th>\
+                        <td>' + (feature.properties['Postcode6'] !== null ? autolinker.link(feature.properties['Postcode6'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Buurtcode</th>\
+                        <td>' + (feature.properties['Buurtcode'] !== null ? autolinker.link(feature.properties['Buurtcode'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Gas demand per postcode6 /m3</th>\
+                        <td>' + (feature.properties['Gas demand per postcode6 /m3'] !== null ? autolinker.link(feature.properties['Gas demand per postcode6 /m3'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Number of restaurants</th>\
+                        <td>' + (feature.properties['Number of restaurants'] !== null ? autolinker.link(feature.properties['Number of restaurants'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Food waste produced /kg per day</th>\
+                        <td>' + (feature.properties['Food waste produced /kg per day'] !== null ? autolinker.link(feature.properties['Food waste produced /kg per day'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4_0() {
+            return {
+                pane: 'pane_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.7)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,230,105,0.7)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4');
+        map.getPane('pane_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4').style.zIndex = 404;
+        map.getPane('pane_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4').style['mix-blend-mode'] = 'normal';
+        var layer_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4 = new L.geoJson(json_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4',
+            layerName: 'layer_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4',
+            pane: 'pane_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4',
+            onEachFeature: pop_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4,
+            style: style_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4_0,
+        });
+        bounds_group.addLayer(layer_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4);
+        map.addLayer(layer_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4);
+        function pop_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fid</th>\
+                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Postcode6</th>\
+                        <td>' + (feature.properties['Postcode6'] !== null ? autolinker.link(feature.properties['Postcode6'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Buurtcode</th>\
+                        <td>' + (feature.properties['Buurtcode'] !== null ? autolinker.link(feature.properties['Buurtcode'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Gas demand per postcode6 /m3</th>\
+                        <td>' + (feature.properties['Gas demand per postcode6 /m3'] !== null ? autolinker.link(feature.properties['Gas demand per postcode6 /m3'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Number of restaurants</th>\
+                        <td>' + (feature.properties['Number of restaurants'] !== null ? autolinker.link(feature.properties['Number of restaurants'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Food waste produced /kg per day</th>\
+                        <td>' + (feature.properties['Food waste produced /kg per day'] !== null ? autolinker.link(feature.properties['Food waste produced /kg per day'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5_0() {
+            return {
+                pane: 'pane_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.6)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(233,149,0,0.6)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5');
+        map.getPane('pane_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5').style.zIndex = 405;
+        map.getPane('pane_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5').style['mix-blend-mode'] = 'normal';
+        var layer_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5 = new L.geoJson(json_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5',
+            layerName: 'layer_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5',
+            pane: 'pane_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5',
+            onEachFeature: pop_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5,
+            style: style_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5_0,
+        });
+        bounds_group.addLayer(layer_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5);
+        map.addLayer(layer_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5.png" /> Potential location of biodigester under 1st scenario_150m buffer': layer_Potentiallocationofbiodigesterunder1stscenario_150mbuffer_5,'<img src="legend/Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4.png" /> Potential location of biodigester under 2nd scenario_150m buffer': layer_Potentiallocationofbiodigesterunder2ndscenario_150mbuffer_4,'<img src="legend/Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3.png" /> Potential location of biodigester under 3rd scenario_150m buffer': layer_Potentiallocationofbiodigesterunder3rdscenario_150mbuffer_3,'<img src="legend/Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2.png" /> Potential location of biodigester under 4th scenario_150m buffer': layer_Potentiallocationofbiodigesterunder4thscenario_150mbuffer_2,'<img src="legend/CityofAmsterdam_1.png" /> City of Amsterdam': layer_CityofAmsterdam_1,"OpenStreetMap": layer_OpenStreetMap_0,}).addTo(map);
+        setBounds();
+        var mapDiv = document.getElementById('map');
+        var row = document.createElement('div');
+        row.className="row";
+        row.id="all";
+        row.style.height = "100%";
+        var col1 = document.createElement('div');
+        col1.className="col9";
+        col1.id = "mapWindow";
+        col1.style.height = "99%";
+        col1.style.width = "80%";
+        col1.style.display = "inline-block";
+        var col2 = document.createElement('div');
+        col2.className="col3";
+        col2.id = "menu";
+        col2.style.display = "inline-block";
+        mapDiv.parentNode.insertBefore(row, mapDiv);
+        document.getElementById("all").appendChild(col1);
+        document.getElementById("all").appendChild(col2);
+        col1.appendChild(mapDiv)
+        var Filters = {"Gas demand per postcode6 /m3": "int","Number of restaurants": "real","Postcode6": "str"};
+        function filterFunc() {
+          map.eachLayer(function(lyr){
+          if ("options" in lyr && "dataVar" in lyr["options"]){
+            features = this[lyr["options"]["dataVar"]].features.slice(0);
+            try{
+              for (key in Filters){
+                keyS = key.replace(/[^a-zA-Z0-9_]/g, "")
+                if (Filters[key] == "str" || Filters[key] == "bool"){
+                  var selection = [];
+                  var options = document.getElementById("sel_" + keyS).options
+                  for (var i=0; i < options.length; i++) {
+                    if (options[i].selected) selection.push(options[i].value);
+                  }
+                    try{
+                      if (key in features[0].properties){
+                        for (i = features.length - 1;
+                          i >= 0; --i){
+                          if (selection.indexOf(
+                          features[i].properties[key])<0
+                          && selection.length>0) {
+                          features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                  }
+                }
+                if (Filters[key] == "int"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (parseInt(features[i].properties[key])
+                          < sliderVals[0]
+                          || parseInt(features[i].properties[key])
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "real"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (features[i].properties[key]
+                          < sliderVals[0]
+                          || features[i].properties[key]
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "date"
+                  || Filters[key] == "datetime"
+                  || Filters[key] == "time"){
+                  try{
+                    if (key in features[0].properties){
+                      HTMLkey = key.replace(/[&\/\\#,+()$~%.'":*?<>{} ]/g, '');
+                      startdate = document.getElementById("dat_" +
+                        HTMLkey + "_date1").value.replace(" ", "T");
+                      enddate = document.getElementById("dat_" +
+                        HTMLkey + "_date2").value.replace(" ", "T");
+                      for (i = features.length - 1; i >= 0; --i){
+                        if (features[i].properties[key] < startdate
+                          || features[i].properties[key] > enddate){
+                          features.splice(i,1);
+                        }
+                      }
+                    }
+                  } catch(err){
+                  }
+                }
+              }
+            } catch(err){
+            }
+          this[lyr["options"]["layerName"]].clearLayers();
+          this[lyr["options"]["layerName"]].addData(features);
+          }
+          })
+        }
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Gasdemandperpostcode6m3 = document.createElement("div");
+            div_Gasdemandperpostcode6m3.id = "div_Gasdemandperpostcode6m3";
+            div_Gasdemandperpostcode6m3.className = "slider";
+            document.getElementById("menu").appendChild(div_Gasdemandperpostcode6m3);
+            var lab_Gasdemandperpostcode6m3 = document.createElement('div');
+            lab_Gasdemandperpostcode6m3.innerHTML  = 'Gas demand per postcode6 /m3: <span id="val_Gasdemandperpostcode6m3"></span>';
+            lab_Gasdemandperpostcode6m3.className = 'filterlabel';
+            document.getElementById("menu").appendChild(lab_Gasdemandperpostcode6m3);
+            var reset_Gasdemandperpostcode6m3 = document.createElement('div');
+            reset_Gasdemandperpostcode6m3.innerHTML = 'clear filter';
+            reset_Gasdemandperpostcode6m3.className = 'filterlabel';
+            lab_Gasdemandperpostcode6m3.className = 'filterlabel';
+            reset_Gasdemandperpostcode6m3.onclick = function() {
+                sel_Gasdemandperpostcode6m3.noUiSlider.reset();
+            };
+            document.getElementById("menu").appendChild(reset_Gasdemandperpostcode6m3);
+            var sel_Gasdemandperpostcode6m3 = document.getElementById('div_Gasdemandperpostcode6m3');
+            noUiSlider.create(sel_Gasdemandperpostcode6m3, {
+                connect: true,
+                start: [4940, 233565],
+                step: 1,
+                format: wNumb({
+                    decimals: 0,
+                    }),
+                range: {
+                min: 4940,
+                max: 233565
+                }
+            });
+            sel_Gasdemandperpostcode6m3.noUiSlider.on('update', function (values) {
+            filterVals =[];
+            for (value in values){
+            filterVals.push(parseInt(value))
+            }
+            val_Gasdemandperpostcode6m3 = document.getElementById('val_Gasdemandperpostcode6m3');
+            val_Gasdemandperpostcode6m3.innerHTML = values.join(' - ');
+                filterFunc()
+            });
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Numberofrestaurants = document.createElement("div");
+            div_Numberofrestaurants.id = "div_Numberofrestaurants";
+            div_Numberofrestaurants.className = "slider";
+            document.getElementById("menu").appendChild(div_Numberofrestaurants);
+            var lab_Numberofrestaurants = document.createElement('div');
+            lab_Numberofrestaurants.innerHTML  = 'Number of restaurants: <span id="val_Numberofrestaurants"></span>';
+            lab_Numberofrestaurants.className = 'filterlabel';
+            document.getElementById("menu").appendChild(lab_Numberofrestaurants);
+            var reset_Numberofrestaurants = document.createElement('div');
+            reset_Numberofrestaurants.innerHTML = 'clear filter';
+            reset_Numberofrestaurants.className = 'filterlabel';
+            lab_Numberofrestaurants.className = 'filterlabel';
+            reset_Numberofrestaurants.onclick = function() {
+                sel_Numberofrestaurants.noUiSlider.reset();
+            };
+            document.getElementById("menu").appendChild(reset_Numberofrestaurants);
+            var sel_Numberofrestaurants = document.getElementById('div_Numberofrestaurants');
+            noUiSlider.create(sel_Numberofrestaurants, {
+                connect: true,
+                start: [4.0, 38.0],
+                range: {
+                min: 4.0,
+                max: 38.0
+                }
+            });
+            sel_Numberofrestaurants.noUiSlider.on('update', function (values) {
+            val_Numberofrestaurants = document.getElementById('val_Numberofrestaurants');
+            val_Numberofrestaurants.innerHTML = values.join(' - ');
+                filterFunc()
+            });
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Postcode6 = document.createElement('div');
+            div_Postcode6.id = "div_Postcode6";
+            div_Postcode6.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Postcode6);
+            sel_Postcode6 = document.createElement('select');
+            sel_Postcode6.multiple = true;
+            sel_Postcode6.size = 10;
+            sel_Postcode6.id = "sel_Postcode6";
+            var Postcode6_options_str = "<option value='' unselected></option>";
+            sel_Postcode6.onchange = function(){filterFunc()};
+            Postcode6_options_str  += '<option value="1011CK">1011CK</option>';
+            Postcode6_options_str  += '<option value="1011CL">1011CL</option>';
+            Postcode6_options_str  += '<option value="1011CP">1011CP</option>';
+            Postcode6_options_str  += '<option value="1011DB">1011DB</option>';
+            Postcode6_options_str  += '<option value="1011DL">1011DL</option>';
+            Postcode6_options_str  += '<option value="1011EJ">1011EJ</option>';
+            Postcode6_options_str  += '<option value="1011EK">1011EK</option>';
+            Postcode6_options_str  += '<option value="1011EL">1011EL</option>';
+            Postcode6_options_str  += '<option value="1011EM">1011EM</option>';
+            Postcode6_options_str  += '<option value="1011EN">1011EN</option>';
+            Postcode6_options_str  += '<option value="1011ES">1011ES</option>';
+            Postcode6_options_str  += '<option value="1011EV">1011EV</option>';
+            Postcode6_options_str  += '<option value="1011GN">1011GN</option>';
+            Postcode6_options_str  += '<option value="1011JP">1011JP</option>';
+            Postcode6_options_str  += '<option value="1011JR">1011JR</option>';
+            Postcode6_options_str  += '<option value="1011JS">1011JS</option>';
+            Postcode6_options_str  += '<option value="1011JV">1011JV</option>';
+            Postcode6_options_str  += '<option value="1011MA">1011MA</option>';
+            Postcode6_options_str  += '<option value="1011NE">1011NE</option>';
+            Postcode6_options_str  += '<option value="1011TR">1011TR</option>';
+            Postcode6_options_str  += '<option value="1011TS">1011TS</option>';
+            Postcode6_options_str  += '<option value="1011VA">1011VA</option>';
+            Postcode6_options_str  += '<option value="1011VB">1011VB</option>';
+            Postcode6_options_str  += '<option value="1012AA">1012AA</option>';
+            Postcode6_options_str  += '<option value="1012AG">1012AG</option>';
+            Postcode6_options_str  += '<option value="1012AJ">1012AJ</option>';
+            Postcode6_options_str  += '<option value="1012AL">1012AL</option>';
+            Postcode6_options_str  += '<option value="1012AM">1012AM</option>';
+            Postcode6_options_str  += '<option value="1012AS">1012AS</option>';
+            Postcode6_options_str  += '<option value="1012AT">1012AT</option>';
+            Postcode6_options_str  += '<option value="1012AV">1012AV</option>';
+            Postcode6_options_str  += '<option value="1012AW">1012AW</option>';
+            Postcode6_options_str  += '<option value="1012AX">1012AX</option>';
+            Postcode6_options_str  += '<option value="1012AZ">1012AZ</option>';
+            Postcode6_options_str  += '<option value="1012BA">1012BA</option>';
+            Postcode6_options_str  += '<option value="1012BB">1012BB</option>';
+            Postcode6_options_str  += '<option value="1012BC">1012BC</option>';
+            Postcode6_options_str  += '<option value="1012BD">1012BD</option>';
+            Postcode6_options_str  += '<option value="1012BE">1012BE</option>';
+            Postcode6_options_str  += '<option value="1012BH">1012BH</option>';
+            Postcode6_options_str  += '<option value="1012BJ">1012BJ</option>';
+            Postcode6_options_str  += '<option value="1012BK">1012BK</option>';
+            Postcode6_options_str  += '<option value="1012BL">1012BL</option>';
+            Postcode6_options_str  += '<option value="1012BM">1012BM</option>';
+            Postcode6_options_str  += '<option value="1012BN">1012BN</option>';
+            Postcode6_options_str  += '<option value="1012BP">1012BP</option>';
+            Postcode6_options_str  += '<option value="1012BR">1012BR</option>';
+            Postcode6_options_str  += '<option value="1012BT">1012BT</option>';
+            Postcode6_options_str  += '<option value="1012BX">1012BX</option>';
+            Postcode6_options_str  += '<option value="1012BZ">1012BZ</option>';
+            Postcode6_options_str  += '<option value="1012CA">1012CA</option>';
+            Postcode6_options_str  += '<option value="1012CB">1012CB</option>';
+            Postcode6_options_str  += '<option value="1012CC">1012CC</option>';
+            Postcode6_options_str  += '<option value="1012CE">1012CE</option>';
+            Postcode6_options_str  += '<option value="1012CS">1012CS</option>';
+            Postcode6_options_str  += '<option value="1012CT">1012CT</option>';
+            Postcode6_options_str  += '<option value="1012CV">1012CV</option>';
+            Postcode6_options_str  += '<option value="1012CW">1012CW</option>';
+            Postcode6_options_str  += '<option value="1012DA">1012DA</option>';
+            Postcode6_options_str  += '<option value="1012DB">1012DB</option>';
+            Postcode6_options_str  += '<option value="1012DG">1012DG</option>';
+            Postcode6_options_str  += '<option value="1012DH">1012DH</option>';
+            Postcode6_options_str  += '<option value="1012DN">1012DN</option>';
+            Postcode6_options_str  += '<option value="1012DP">1012DP</option>';
+            Postcode6_options_str  += '<option value="1012DV">1012DV</option>';
+            Postcode6_options_str  += '<option value="1012DZ">1012DZ</option>';
+            Postcode6_options_str  += '<option value="1012ED">1012ED</option>';
+            Postcode6_options_str  += '<option value="1012EE">1012EE</option>';
+            Postcode6_options_str  += '<option value="1012EJ">1012EJ</option>';
+            Postcode6_options_str  += '<option value="1012ES">1012ES</option>';
+            Postcode6_options_str  += '<option value="1012ET">1012ET</option>';
+            Postcode6_options_str  += '<option value="1012EV">1012EV</option>';
+            Postcode6_options_str  += '<option value="1012GA">1012GA</option>';
+            Postcode6_options_str  += '<option value="1012GE">1012GE</option>';
+            Postcode6_options_str  += '<option value="1012GJ">1012GJ</option>';
+            Postcode6_options_str  += '<option value="1012GK">1012GK</option>';
+            Postcode6_options_str  += '<option value="1012GM">1012GM</option>';
+            Postcode6_options_str  += '<option value="1012GN">1012GN</option>';
+            Postcode6_options_str  += '<option value="1012GR">1012GR</option>';
+            Postcode6_options_str  += '<option value="1012GS">1012GS</option>';
+            Postcode6_options_str  += '<option value="1012GT">1012GT</option>';
+            Postcode6_options_str  += '<option value="1012GV">1012GV</option>';
+            Postcode6_options_str  += '<option value="1012HH">1012HH</option>';
+            Postcode6_options_str  += '<option value="1012HJ">1012HJ</option>';
+            Postcode6_options_str  += '<option value="1012HK">1012HK</option>';
+            Postcode6_options_str  += '<option value="1012HT">1012HT</option>';
+            Postcode6_options_str  += '<option value="1012HV">1012HV</option>';
+            Postcode6_options_str  += '<option value="1012HX">1012HX</option>';
+            Postcode6_options_str  += '<option value="1012HZ">1012HZ</option>';
+            Postcode6_options_str  += '<option value="1012JA">1012JA</option>';
+            Postcode6_options_str  += '<option value="1012JD">1012JD</option>';
+            Postcode6_options_str  += '<option value="1012JE">1012JE</option>';
+            Postcode6_options_str  += '<option value="1012JG">1012JG</option>';
+            Postcode6_options_str  += '<option value="1012JH">1012JH</option>';
+            Postcode6_options_str  += '<option value="1012JJ">1012JJ</option>';
+            Postcode6_options_str  += '<option value="1012JM">1012JM</option>';
+            Postcode6_options_str  += '<option value="1012JN">1012JN</option>';
+            Postcode6_options_str  += '<option value="1012JP">1012JP</option>';
+            Postcode6_options_str  += '<option value="1012JT">1012JT</option>';
+            Postcode6_options_str  += '<option value="1012JZ">1012JZ</option>';
+            Postcode6_options_str  += '<option value="1012KG">1012KG</option>';
+            Postcode6_options_str  += '<option value="1012KM">1012KM</option>';
+            Postcode6_options_str  += '<option value="1012KN">1012KN</option>';
+            Postcode6_options_str  += '<option value="1012KX">1012KX</option>';
+            Postcode6_options_str  += '<option value="1012LC">1012LC</option>';
+            Postcode6_options_str  += '<option value="1012LD">1012LD</option>';
+            Postcode6_options_str  += '<option value="1012LK">1012LK</option>';
+            Postcode6_options_str  += '<option value="1012LL">1012LL</option>';
+            Postcode6_options_str  += '<option value="1012LM">1012LM</option>';
+            Postcode6_options_str  += '<option value="1012LT">1012LT</option>';
+            Postcode6_options_str  += '<option value="1012LV">1012LV</option>';
+            Postcode6_options_str  += '<option value="1012LZ">1012LZ</option>';
+            Postcode6_options_str  += '<option value="1012MA">1012MA</option>';
+            Postcode6_options_str  += '<option value="1012MB">1012MB</option>';
+            Postcode6_options_str  += '<option value="1012MD">1012MD</option>';
+            Postcode6_options_str  += '<option value="1012ME">1012ME</option>';
+            Postcode6_options_str  += '<option value="1012MG">1012MG</option>';
+            Postcode6_options_str  += '<option value="1012MJ">1012MJ</option>';
+            Postcode6_options_str  += '<option value="1012ML">1012ML</option>';
+            Postcode6_options_str  += '<option value="1012MN">1012MN</option>';
+            Postcode6_options_str  += '<option value="1012MP">1012MP</option>';
+            Postcode6_options_str  += '<option value="1012MS">1012MS</option>';
+            Postcode6_options_str  += '<option value="1012MT">1012MT</option>';
+            Postcode6_options_str  += '<option value="1012MZ">1012MZ</option>';
+            Postcode6_options_str  += '<option value="1012NA">1012NA</option>';
+            Postcode6_options_str  += '<option value="1012NC">1012NC</option>';
+            Postcode6_options_str  += '<option value="1012ND">1012ND</option>';
+            Postcode6_options_str  += '<option value="1012NG">1012NG</option>';
+            Postcode6_options_str  += '<option value="1012NJ">1012NJ</option>';
+            Postcode6_options_str  += '<option value="1012NK">1012NK</option>';
+            Postcode6_options_str  += '<option value="1012NL">1012NL</option>';
+            Postcode6_options_str  += '<option value="1012NM">1012NM</option>';
+            Postcode6_options_str  += '<option value="1012NN">1012NN</option>';
+            Postcode6_options_str  += '<option value="1012NP">1012NP</option>';
+            Postcode6_options_str  += '<option value="1012PA">1012PA</option>';
+            Postcode6_options_str  += '<option value="1012PB">1012PB</option>';
+            Postcode6_options_str  += '<option value="1012PC">1012PC</option>';
+            Postcode6_options_str  += '<option value="1012PN">1012PN</option>';
+            Postcode6_options_str  += '<option value="1012PP">1012PP</option>';
+            Postcode6_options_str  += '<option value="1012PT">1012PT</option>';
+            Postcode6_options_str  += '<option value="1012PV">1012PV</option>';
+            Postcode6_options_str  += '<option value="1012PW">1012PW</option>';
+            Postcode6_options_str  += '<option value="1012PX">1012PX</option>';
+            Postcode6_options_str  += '<option value="1012RA">1012RA</option>';
+            Postcode6_options_str  += '<option value="1012RB">1012RB</option>';
+            Postcode6_options_str  += '<option value="1012RC">1012RC</option>';
+            Postcode6_options_str  += '<option value="1012RE">1012RE</option>';
+            Postcode6_options_str  += '<option value="1012RG">1012RG</option>';
+            Postcode6_options_str  += '<option value="1012RH">1012RH</option>';
+            Postcode6_options_str  += '<option value="1012RP">1012RP</option>';
+            Postcode6_options_str  += '<option value="1012RR">1012RR</option>';
+            Postcode6_options_str  += '<option value="1012RT">1012RT</option>';
+            Postcode6_options_str  += '<option value="1012RV">1012RV</option>';
+            Postcode6_options_str  += '<option value="1012RW">1012RW</option>';
+            Postcode6_options_str  += '<option value="1012RX">1012RX</option>';
+            Postcode6_options_str  += '<option value="1012RZ">1012RZ</option>';
+            Postcode6_options_str  += '<option value="1012SB">1012SB</option>';
+            Postcode6_options_str  += '<option value="1012SC">1012SC</option>';
+            Postcode6_options_str  += '<option value="1012SE">1012SE</option>';
+            Postcode6_options_str  += '<option value="1012SG">1012SG</option>';
+            Postcode6_options_str  += '<option value="1012SH">1012SH</option>';
+            Postcode6_options_str  += '<option value="1012SJ">1012SJ</option>';
+            Postcode6_options_str  += '<option value="1012SK">1012SK</option>';
+            Postcode6_options_str  += '<option value="1012SL">1012SL</option>';
+            Postcode6_options_str  += '<option value="1012SN">1012SN</option>';
+            Postcode6_options_str  += '<option value="1012SP">1012SP</option>';
+            Postcode6_options_str  += '<option value="1012SR">1012SR</option>';
+            Postcode6_options_str  += '<option value="1012ST">1012ST</option>';
+            Postcode6_options_str  += '<option value="1012SV">1012SV</option>';
+            Postcode6_options_str  += '<option value="1012SW">1012SW</option>';
+            Postcode6_options_str  += '<option value="1012SZ">1012SZ</option>';
+            Postcode6_options_str  += '<option value="1012TB">1012TB</option>';
+            Postcode6_options_str  += '<option value="1012TD">1012TD</option>';
+            Postcode6_options_str  += '<option value="1012TE">1012TE</option>';
+            Postcode6_options_str  += '<option value="1012TL">1012TL</option>';
+            Postcode6_options_str  += '<option value="1012TN">1012TN</option>';
+            Postcode6_options_str  += '<option value="1012TP">1012TP</option>';
+            Postcode6_options_str  += '<option value="1012TS">1012TS</option>';
+            Postcode6_options_str  += '<option value="1012TT">1012TT</option>';
+            Postcode6_options_str  += '<option value="1012TV">1012TV</option>';
+            Postcode6_options_str  += '<option value="1012TW">1012TW</option>';
+            Postcode6_options_str  += '<option value="1012TX">1012TX</option>';
+            Postcode6_options_str  += '<option value="1012VA">1012VA</option>';
+            Postcode6_options_str  += '<option value="1012VE">1012VE</option>';
+            Postcode6_options_str  += '<option value="1012VG">1012VG</option>';
+            Postcode6_options_str  += '<option value="1012VJ">1012VJ</option>';
+            Postcode6_options_str  += '<option value="1012VK">1012VK</option>';
+            Postcode6_options_str  += '<option value="1012VP">1012VP</option>';
+            Postcode6_options_str  += '<option value="1012VR">1012VR</option>';
+            Postcode6_options_str  += '<option value="1012VS">1012VS</option>';
+            Postcode6_options_str  += '<option value="1012VW">1012VW</option>';
+            Postcode6_options_str  += '<option value="1012VX">1012VX</option>';
+            Postcode6_options_str  += '<option value="1012VZ">1012VZ</option>';
+            Postcode6_options_str  += '<option value="1012WH">1012WH</option>';
+            Postcode6_options_str  += '<option value="1012WJ">1012WJ</option>';
+            Postcode6_options_str  += '<option value="1012WK">1012WK</option>';
+            Postcode6_options_str  += '<option value="1012WL">1012WL</option>';
+            Postcode6_options_str  += '<option value="1012WN">1012WN</option>';
+            Postcode6_options_str  += '<option value="1012WP">1012WP</option>';
+            Postcode6_options_str  += '<option value="1012WR">1012WR</option>';
+            Postcode6_options_str  += '<option value="1012WT">1012WT</option>';
+            Postcode6_options_str  += '<option value="1012WV">1012WV</option>';
+            Postcode6_options_str  += '<option value="1012WX">1012WX</option>';
+            Postcode6_options_str  += '<option value="1012WZ">1012WZ</option>';
+            Postcode6_options_str  += '<option value="1012XG">1012XG</option>';
+            Postcode6_options_str  += '<option value="1012XK">1012XK</option>';
+            Postcode6_options_str  += '<option value="1012XL">1012XL</option>';
+            Postcode6_options_str  += '<option value="1012XM">1012XM</option>';
+            Postcode6_options_str  += '<option value="1012XN">1012XN</option>';
+            Postcode6_options_str  += '<option value="1012XP">1012XP</option>';
+            Postcode6_options_str  += '<option value="1012XS">1012XS</option>';
+            Postcode6_options_str  += '<option value="1012ZJ">1012ZJ</option>';
+            Postcode6_options_str  += '<option value="1013DP">1013DP</option>';
+            Postcode6_options_str  += '<option value="1013EA">1013EA</option>';
+            Postcode6_options_str  += '<option value="1013EB">1013EB</option>';
+            Postcode6_options_str  += '<option value="1013ED">1013ED</option>';
+            Postcode6_options_str  += '<option value="1013EE">1013EE</option>';
+            Postcode6_options_str  += '<option value="1013EG">1013EG</option>';
+            Postcode6_options_str  += '<option value="1013EH">1013EH</option>';
+            Postcode6_options_str  += '<option value="1013EJ">1013EJ</option>';
+            Postcode6_options_str  += '<option value="1013EK">1013EK</option>';
+            Postcode6_options_str  += '<option value="1013EL">1013EL</option>';
+            Postcode6_options_str  += '<option value="1013EM">1013EM</option>';
+            Postcode6_options_str  += '<option value="1013EN">1013EN</option>';
+            Postcode6_options_str  += '<option value="1013EP">1013EP</option>';
+            Postcode6_options_str  += '<option value="1013ES">1013ES</option>';
+            Postcode6_options_str  += '<option value="1013ET">1013ET</option>';
+            Postcode6_options_str  += '<option value="1013EV">1013EV</option>';
+            Postcode6_options_str  += '<option value="1013EW">1013EW</option>';
+            Postcode6_options_str  += '<option value="1013EX">1013EX</option>';
+            Postcode6_options_str  += '<option value="1013EZ">1013EZ</option>';
+            Postcode6_options_str  += '<option value="1013GA">1013GA</option>';
+            Postcode6_options_str  += '<option value="1013GB">1013GB</option>';
+            Postcode6_options_str  += '<option value="1013GC">1013GC</option>';
+            Postcode6_options_str  += '<option value="1013GD">1013GD</option>';
+            Postcode6_options_str  += '<option value="1013GE">1013GE</option>';
+            Postcode6_options_str  += '<option value="1013GG">1013GG</option>';
+            Postcode6_options_str  += '<option value="1013GH">1013GH</option>';
+            Postcode6_options_str  += '<option value="1013GJ">1013GJ</option>';
+            Postcode6_options_str  += '<option value="1013GK">1013GK</option>';
+            Postcode6_options_str  += '<option value="1013GL">1013GL</option>';
+            Postcode6_options_str  += '<option value="1013GM">1013GM</option>';
+            Postcode6_options_str  += '<option value="1013GN">1013GN</option>';
+            Postcode6_options_str  += '<option value="1013GP">1013GP</option>';
+            Postcode6_options_str  += '<option value="1013GR">1013GR</option>';
+            Postcode6_options_str  += '<option value="1013GS">1013GS</option>';
+            Postcode6_options_str  += '<option value="1013GT">1013GT</option>';
+            Postcode6_options_str  += '<option value="1013HD">1013HD</option>';
+            Postcode6_options_str  += '<option value="1013HX">1013HX</option>';
+            Postcode6_options_str  += '<option value="1013HZ">1013HZ</option>';
+            Postcode6_options_str  += '<option value="1013JA">1013JA</option>';
+            Postcode6_options_str  += '<option value="1013JC">1013JC</option>';
+            Postcode6_options_str  += '<option value="1013JD">1013JD</option>';
+            Postcode6_options_str  += '<option value="1013JE">1013JE</option>';
+            Postcode6_options_str  += '<option value="1013JG">1013JG</option>';
+            Postcode6_options_str  += '<option value="1013JL">1013JL</option>';
+            Postcode6_options_str  += '<option value="1013JM">1013JM</option>';
+            Postcode6_options_str  += '<option value="1013JS">1013JS</option>';
+            Postcode6_options_str  += '<option value="1013JT">1013JT</option>';
+            Postcode6_options_str  += '<option value="1013JV">1013JV</option>';
+            Postcode6_options_str  += '<option value="1013JZ">1013JZ</option>';
+            Postcode6_options_str  += '<option value="1013KA">1013KA</option>';
+            Postcode6_options_str  += '<option value="1013KB">1013KB</option>';
+            Postcode6_options_str  += '<option value="1013KC">1013KC</option>';
+            Postcode6_options_str  += '<option value="1013KJ">1013KJ</option>';
+            Postcode6_options_str  += '<option value="1015AH">1015AH</option>';
+            Postcode6_options_str  += '<option value="1015AJ">1015AJ</option>';
+            Postcode6_options_str  += '<option value="1015AW">1015AW</option>';
+            Postcode6_options_str  += '<option value="1015BH">1015BH</option>';
+            Postcode6_options_str  += '<option value="1015BJ">1015BJ</option>';
+            Postcode6_options_str  += '<option value="1015GA">1015GA</option>';
+            Postcode6_options_str  += '<option value="1015GD">1015GD</option>';
+            Postcode6_options_str  += '<option value="1015GE">1015GE</option>';
+            Postcode6_options_str  += '<option value="1015GG">1015GG</option>';
+            Postcode6_options_str  += '<option value="1015HW">1015HW</option>';
+            Postcode6_options_str  += '<option value="1015HX">1015HX</option>';
+            Postcode6_options_str  += '<option value="1015JD">1015JD</option>';
+            Postcode6_options_str  += '<option value="1015JJ">1015JJ</option>';
+            Postcode6_options_str  += '<option value="1015JK">1015JK</option>';
+            Postcode6_options_str  += '<option value="1015JP">1015JP</option>';
+            Postcode6_options_str  += '<option value="1015JR">1015JR</option>';
+            Postcode6_options_str  += '<option value="1015JV">1015JV</option>';
+            Postcode6_options_str  += '<option value="1015JW">1015JW</option>';
+            Postcode6_options_str  += '<option value="1015KB">1015KB</option>';
+            Postcode6_options_str  += '<option value="1015KC">1015KC</option>';
+            Postcode6_options_str  += '<option value="1015KD">1015KD</option>';
+            Postcode6_options_str  += '<option value="1015KJ">1015KJ</option>';
+            Postcode6_options_str  += '<option value="1015KK">1015KK</option>';
+            Postcode6_options_str  += '<option value="1015KL">1015KL</option>';
+            Postcode6_options_str  += '<option value="1015KV">1015KV</option>';
+            Postcode6_options_str  += '<option value="1015KX">1015KX</option>';
+            Postcode6_options_str  += '<option value="1015LE">1015LE</option>';
+            Postcode6_options_str  += '<option value="1015LG">1015LG</option>';
+            Postcode6_options_str  += '<option value="1015LJ">1015LJ</option>';
+            Postcode6_options_str  += '<option value="1015LK">1015LK</option>';
+            Postcode6_options_str  += '<option value="1015LW">1015LW</option>';
+            Postcode6_options_str  += '<option value="1015LX">1015LX</option>';
+            Postcode6_options_str  += '<option value="1015LZ">1015LZ</option>';
+            Postcode6_options_str  += '<option value="1015MA">1015MA</option>';
+            Postcode6_options_str  += '<option value="1015MB">1015MB</option>';
+            Postcode6_options_str  += '<option value="1015MN">1015MN</option>';
+            Postcode6_options_str  += '<option value="1015MP">1015MP</option>';
+            Postcode6_options_str  += '<option value="1015MR">1015MR</option>';
+            Postcode6_options_str  += '<option value="1015MS">1015MS</option>';
+            Postcode6_options_str  += '<option value="1015MV">1015MV</option>';
+            Postcode6_options_str  += '<option value="1015MX">1015MX</option>';
+            Postcode6_options_str  += '<option value="1015MZ">1015MZ</option>';
+            Postcode6_options_str  += '<option value="1015NB">1015NB</option>';
+            Postcode6_options_str  += '<option value="1015NE">1015NE</option>';
+            Postcode6_options_str  += '<option value="1015NJ">1015NJ</option>';
+            Postcode6_options_str  += '<option value="1015NK">1015NK</option>';
+            Postcode6_options_str  += '<option value="1015NR">1015NR</option>';
+            Postcode6_options_str  += '<option value="1015NS">1015NS</option>';
+            Postcode6_options_str  += '<option value="1015NZ">1015NZ</option>';
+            Postcode6_options_str  += '<option value="1015PA">1015PA</option>';
+            Postcode6_options_str  += '<option value="1015PG">1015PG</option>';
+            Postcode6_options_str  += '<option value="1015PH">1015PH</option>';
+            Postcode6_options_str  += '<option value="1015PR">1015PR</option>';
+            Postcode6_options_str  += '<option value="1015PS">1015PS</option>';
+            Postcode6_options_str  += '<option value="1015PW">1015PW</option>';
+            Postcode6_options_str  += '<option value="1015PX">1015PX</option>';
+            Postcode6_options_str  += '<option value="1015RN">1015RN</option>';
+            Postcode6_options_str  += '<option value="1015RT">1015RT</option>';
+            Postcode6_options_str  += '<option value="1015RV">1015RV</option>';
+            Postcode6_options_str  += '<option value="1015RX">1015RX</option>';
+            Postcode6_options_str  += '<option value="1015RZ">1015RZ</option>';
+            Postcode6_options_str  += '<option value="1015SB">1015SB</option>';
+            Postcode6_options_str  += '<option value="1015SC">1015SC</option>';
+            Postcode6_options_str  += '<option value="1016AA">1016AA</option>';
+            Postcode6_options_str  += '<option value="1016AB">1016AB</option>';
+            Postcode6_options_str  += '<option value="1016AH">1016AH</option>';
+            Postcode6_options_str  += '<option value="1016AJ">1016AJ</option>';
+            Postcode6_options_str  += '<option value="1016AL">1016AL</option>';
+            Postcode6_options_str  += '<option value="1016AS">1016AS</option>';
+            Postcode6_options_str  += '<option value="1016AT">1016AT</option>';
+            Postcode6_options_str  += '<option value="1016BD">1016BD</option>';
+            Postcode6_options_str  += '<option value="1016BE">1016BE</option>';
+            Postcode6_options_str  += '<option value="1016BT">1016BT</option>';
+            Postcode6_options_str  += '<option value="1016BV">1016BV</option>';
+            Postcode6_options_str  += '<option value="1016BZ">1016BZ</option>';
+            Postcode6_options_str  += '<option value="1016DE">1016DE</option>';
+            Postcode6_options_str  += '<option value="1016DJ">1016DJ</option>';
+            Postcode6_options_str  += '<option value="1016ED">1016ED</option>';
+            Postcode6_options_str  += '<option value="1016EW">1016EW</option>';
+            Postcode6_options_str  += '<option value="1016EX">1016EX</option>';
+            Postcode6_options_str  += '<option value="1016EZ">1016EZ</option>';
+            Postcode6_options_str  += '<option value="1016GG">1016GG</option>';
+            Postcode6_options_str  += '<option value="1016GH">1016GH</option>';
+            Postcode6_options_str  += '<option value="1016GW">1016GW</option>';
+            Postcode6_options_str  += '<option value="1016GX">1016GX</option>';
+            Postcode6_options_str  += '<option value="1016HB">1016HB</option>';
+            Postcode6_options_str  += '<option value="1016HC">1016HC</option>';
+            Postcode6_options_str  += '<option value="1016HD">1016HD</option>';
+            Postcode6_options_str  += '<option value="1016HJ">1016HJ</option>';
+            Postcode6_options_str  += '<option value="1016HM">1016HM</option>';
+            Postcode6_options_str  += '<option value="1016HN">1016HN</option>';
+            Postcode6_options_str  += '<option value="1016HP">1016HP</option>';
+            Postcode6_options_str  += '<option value="1016KR">1016KR</option>';
+            Postcode6_options_str  += '<option value="1016KS">1016KS</option>';
+            Postcode6_options_str  += '<option value="1016KV">1016KV</option>';
+            Postcode6_options_str  += '<option value="1016KX">1016KX</option>';
+            Postcode6_options_str  += '<option value="1016LB">1016LB</option>';
+            Postcode6_options_str  += '<option value="1016LC">1016LC</option>';
+            Postcode6_options_str  += '<option value="1016LG">1016LG</option>';
+            Postcode6_options_str  += '<option value="1016LJ">1016LJ</option>';
+            Postcode6_options_str  += '<option value="1016LM">1016LM</option>';
+            Postcode6_options_str  += '<option value="1016LN">1016LN</option>';
+            Postcode6_options_str  += '<option value="1016LP">1016LP</option>';
+            Postcode6_options_str  += '<option value="1016LR">1016LR</option>';
+            Postcode6_options_str  += '<option value="1016LS">1016LS</option>';
+            Postcode6_options_str  += '<option value="1016LT">1016LT</option>';
+            Postcode6_options_str  += '<option value="1016LV">1016LV</option>';
+            Postcode6_options_str  += '<option value="1016NB">1016NB</option>';
+            Postcode6_options_str  += '<option value="1016NC">1016NC</option>';
+            Postcode6_options_str  += '<option value="1016NE">1016NE</option>';
+            Postcode6_options_str  += '<option value="1016NG">1016NG</option>';
+            Postcode6_options_str  += '<option value="1016NH">1016NH</option>';
+            Postcode6_options_str  += '<option value="1016NJ">1016NJ</option>';
+            Postcode6_options_str  += '<option value="1017AA">1017AA</option>';
+            Postcode6_options_str  += '<option value="1017AB">1017AB</option>';
+            Postcode6_options_str  += '<option value="1017AC">1017AC</option>';
+            Postcode6_options_str  += '<option value="1017AD">1017AD</option>';
+            Postcode6_options_str  += '<option value="1017AV">1017AV</option>';
+            Postcode6_options_str  += '<option value="1017AW">1017AW</option>';
+            Postcode6_options_str  += '<option value="1017AX">1017AX</option>';
+            Postcode6_options_str  += '<option value="1017AZ">1017AZ</option>';
+            Postcode6_options_str  += '<option value="1017BA">1017BA</option>';
+            Postcode6_options_str  += '<option value="1017BB">1017BB</option>';
+            Postcode6_options_str  += '<option value="1017BC">1017BC</option>';
+            Postcode6_options_str  += '<option value="1017BD">1017BD</option>';
+            Postcode6_options_str  += '<option value="1017BG">1017BG</option>';
+            Postcode6_options_str  += '<option value="1017BH">1017BH</option>';
+            Postcode6_options_str  += '<option value="1017BJ">1017BJ</option>';
+            Postcode6_options_str  += '<option value="1017BK">1017BK</option>';
+            Postcode6_options_str  += '<option value="1017BL">1017BL</option>';
+            Postcode6_options_str  += '<option value="1017BM">1017BM</option>';
+            Postcode6_options_str  += '<option value="1017BN">1017BN</option>';
+            Postcode6_options_str  += '<option value="1017BP">1017BP</option>';
+            Postcode6_options_str  += '<option value="1017BR">1017BR</option>';
+            Postcode6_options_str  += '<option value="1017BS">1017BS</option>';
+            Postcode6_options_str  += '<option value="1017BT">1017BT</option>';
+            Postcode6_options_str  += '<option value="1017BW">1017BW</option>';
+            Postcode6_options_str  += '<option value="1017CD">1017CD</option>';
+            Postcode6_options_str  += '<option value="1017CE">1017CE</option>';
+            Postcode6_options_str  += '<option value="1017CG">1017CG</option>';
+            Postcode6_options_str  += '<option value="1017CK">1017CK</option>';
+            Postcode6_options_str  += '<option value="1017CM">1017CM</option>';
+            Postcode6_options_str  += '<option value="1017CN">1017CN</option>';
+            Postcode6_options_str  += '<option value="1017CP">1017CP</option>';
+            Postcode6_options_str  += '<option value="1017CS">1017CS</option>';
+            Postcode6_options_str  += '<option value="1017CT">1017CT</option>';
+            Postcode6_options_str  += '<option value="1017CV">1017CV</option>';
+            Postcode6_options_str  += '<option value="1017CW">1017CW</option>';
+            Postcode6_options_str  += '<option value="1017CX">1017CX</option>';
+            Postcode6_options_str  += '<option value="1017CZ">1017CZ</option>';
+            Postcode6_options_str  += '<option value="1017DA">1017DA</option>';
+            Postcode6_options_str  += '<option value="1017DW">1017DW</option>';
+            Postcode6_options_str  += '<option value="1017DX">1017DX</option>';
+            Postcode6_options_str  += '<option value="1017EB">1017EB</option>';
+            Postcode6_options_str  += '<option value="1017EC">1017EC</option>';
+            Postcode6_options_str  += '<option value="1017EH">1017EH</option>';
+            Postcode6_options_str  += '<option value="1017EJ">1017EJ</option>';
+            Postcode6_options_str  += '<option value="1017EK">1017EK</option>';
+            Postcode6_options_str  += '<option value="1017EX">1017EX</option>';
+            Postcode6_options_str  += '<option value="1017EZ">1017EZ</option>';
+            Postcode6_options_str  += '<option value="1017GB">1017GB</option>';
+            Postcode6_options_str  += '<option value="1017GC">1017GC</option>';
+            Postcode6_options_str  += '<option value="1017GM">1017GM</option>';
+            Postcode6_options_str  += '<option value="1017GN">1017GN</option>';
+            Postcode6_options_str  += '<option value="1017GW">1017GW</option>';
+            Postcode6_options_str  += '<option value="1017HA">1017HA</option>';
+            Postcode6_options_str  += '<option value="1017HD">1017HD</option>';
+            Postcode6_options_str  += '<option value="1017HE">1017HE</option>';
+            Postcode6_options_str  += '<option value="1017HH">1017HH</option>';
+            Postcode6_options_str  += '<option value="1017HK">1017HK</option>';
+            Postcode6_options_str  += '<option value="1017HN">1017HN</option>';
+            Postcode6_options_str  += '<option value="1017HP">1017HP</option>';
+            Postcode6_options_str  += '<option value="1017HW">1017HW</option>';
+            Postcode6_options_str  += '<option value="1017HX">1017HX</option>';
+            Postcode6_options_str  += '<option value="1017JA">1017JA</option>';
+            Postcode6_options_str  += '<option value="1017JE">1017JE</option>';
+            Postcode6_options_str  += '<option value="1017JG">1017JG</option>';
+            Postcode6_options_str  += '<option value="1017JL">1017JL</option>';
+            Postcode6_options_str  += '<option value="1017JV">1017JV</option>';
+            Postcode6_options_str  += '<option value="1017JW">1017JW</option>';
+            Postcode6_options_str  += '<option value="1017JX">1017JX</option>';
+            Postcode6_options_str  += '<option value="1017KA">1017KA</option>';
+            Postcode6_options_str  += '<option value="1017KE">1017KE</option>';
+            Postcode6_options_str  += '<option value="1017KG">1017KG</option>';
+            Postcode6_options_str  += '<option value="1017KH">1017KH</option>';
+            Postcode6_options_str  += '<option value="1017KJ">1017KJ</option>';
+            Postcode6_options_str  += '<option value="1017KL">1017KL</option>';
+            Postcode6_options_str  += '<option value="1017LH">1017LH</option>';
+            Postcode6_options_str  += '<option value="1017MA">1017MA</option>';
+            Postcode6_options_str  += '<option value="1017MB">1017MB</option>';
+            Postcode6_options_str  += '<option value="1017NE">1017NE</option>';
+            Postcode6_options_str  += '<option value="1017NG">1017NG</option>';
+            Postcode6_options_str  += '<option value="1017NH">1017NH</option>';
+            Postcode6_options_str  += '<option value="1017NJ">1017NJ</option>';
+            Postcode6_options_str  += '<option value="1017NL">1017NL</option>';
+            Postcode6_options_str  += '<option value="1017NM">1017NM</option>';
+            Postcode6_options_str  += '<option value="1017NN">1017NN</option>';
+            Postcode6_options_str  += '<option value="1017NP">1017NP</option>';
+            Postcode6_options_str  += '<option value="1017NV">1017NV</option>';
+            Postcode6_options_str  += '<option value="1017NX">1017NX</option>';
+            Postcode6_options_str  += '<option value="1017NZ">1017NZ</option>';
+            Postcode6_options_str  += '<option value="1017PC">1017PC</option>';
+            Postcode6_options_str  += '<option value="1017PD">1017PD</option>';
+            Postcode6_options_str  += '<option value="1017PE">1017PE</option>';
+            Postcode6_options_str  += '<option value="1017PG">1017PG</option>';
+            Postcode6_options_str  += '<option value="1017PH">1017PH</option>';
+            Postcode6_options_str  += '<option value="1017PR">1017PR</option>';
+            Postcode6_options_str  += '<option value="1017PT">1017PT</option>';
+            Postcode6_options_str  += '<option value="1017PV">1017PV</option>';
+            Postcode6_options_str  += '<option value="1017PW">1017PW</option>';
+            Postcode6_options_str  += '<option value="1017PX">1017PX</option>';
+            Postcode6_options_str  += '<option value="1017PZ">1017PZ</option>';
+            Postcode6_options_str  += '<option value="1017RA">1017RA</option>';
+            Postcode6_options_str  += '<option value="1017RC">1017RC</option>';
+            Postcode6_options_str  += '<option value="1017RD">1017RD</option>';
+            Postcode6_options_str  += '<option value="1017RE">1017RE</option>';
+            Postcode6_options_str  += '<option value="1017RG">1017RG</option>';
+            Postcode6_options_str  += '<option value="1017RH">1017RH</option>';
+            Postcode6_options_str  += '<option value="1017RJ">1017RJ</option>';
+            Postcode6_options_str  += '<option value="1017RK">1017RK</option>';
+            Postcode6_options_str  += '<option value="1017RP">1017RP</option>';
+            Postcode6_options_str  += '<option value="1017RR">1017RR</option>';
+            Postcode6_options_str  += '<option value="1017RV">1017RV</option>';
+            Postcode6_options_str  += '<option value="1017TG">1017TG</option>';
+            Postcode6_options_str  += '<option value="1017VA">1017VA</option>';
+            Postcode6_options_str  += '<option value="1017VC">1017VC</option>';
+            Postcode6_options_str  += '<option value="1017VH">1017VH</option>';
+            Postcode6_options_str  += '<option value="1017VJ">1017VJ</option>';
+            Postcode6_options_str  += '<option value="1017VK">1017VK</option>';
+            Postcode6_options_str  += '<option value="1017VL">1017VL</option>';
+            Postcode6_options_str  += '<option value="1017VM">1017VM</option>';
+            Postcode6_options_str  += '<option value="1017VN">1017VN</option>';
+            Postcode6_options_str  += '<option value="1017VP">1017VP</option>';
+            Postcode6_options_str  += '<option value="1017VR">1017VR</option>';
+            Postcode6_options_str  += '<option value="1017VS">1017VS</option>';
+            Postcode6_options_str  += '<option value="1017VT">1017VT</option>';
+            Postcode6_options_str  += '<option value="1017WC">1017WC</option>';
+            Postcode6_options_str  += '<option value="1017WD">1017WD</option>';
+            Postcode6_options_str  += '<option value="1017WH">1017WH</option>';
+            Postcode6_options_str  += '<option value="1017XD">1017XD</option>';
+            Postcode6_options_str  += '<option value="1017XK">1017XK</option>';
+            Postcode6_options_str  += '<option value="1017XM">1017XM</option>';
+            Postcode6_options_str  += '<option value="1017ZD">1017ZD</option>';
+            Postcode6_options_str  += '<option value="1018AB">1018AB</option>';
+            Postcode6_options_str  += '<option value="1018AC">1018AC</option>';
+            Postcode6_options_str  += '<option value="1018BA">1018BA</option>';
+            Postcode6_options_str  += '<option value="1018BL">1018BL</option>';
+            Postcode6_options_str  += '<option value="1018DE">1018DE</option>';
+            Postcode6_options_str  += '<option value="1018DG">1018DG</option>';
+            Postcode6_options_str  += '<option value="1018SX">1018SX</option>';
+            Postcode6_options_str  += '<option value="1018SZ">1018SZ</option>';
+            Postcode6_options_str  += '<option value="1018TA">1018TA</option>';
+            Postcode6_options_str  += '<option value="1018TB">1018TB</option>';
+            Postcode6_options_str  += '<option value="1018TC">1018TC</option>';
+            Postcode6_options_str  += '<option value="1018TM">1018TM</option>';
+            Postcode6_options_str  += '<option value="1019BP">1019BP</option>';
+            Postcode6_options_str  += '<option value="1022WX">1022WX</option>';
+            Postcode6_options_str  += '<option value="1023BB">1023BB</option>';
+            Postcode6_options_str  += '<option value="1023BC">1023BC</option>';
+            Postcode6_options_str  += '<option value="1023BD">1023BD</option>';
+            Postcode6_options_str  += '<option value="1024LL">1024LL</option>';
+            Postcode6_options_str  += '<option value="1024NB">1024NB</option>';
+            Postcode6_options_str  += '<option value="1025EX">1025EX</option>';
+            Postcode6_options_str  += '<option value="1025GA">1025GA</option>';
+            Postcode6_options_str  += '<option value="1025GB">1025GB</option>';
+            Postcode6_options_str  += '<option value="1031AA">1031AA</option>';
+            Postcode6_options_str  += '<option value="1031AE">1031AE</option>';
+            Postcode6_options_str  += '<option value="1031AL">1031AL</option>';
+            Postcode6_options_str  += '<option value="1031AS">1031AS</option>';
+            Postcode6_options_str  += '<option value="1031AW">1031AW</option>';
+            Postcode6_options_str  += '<option value="1051AZ">1051AZ</option>';
+            Postcode6_options_str  += '<option value="1051BC">1051BC</option>';
+            Postcode6_options_str  += '<option value="1051BD">1051BD</option>';
+            Postcode6_options_str  += '<option value="1051BP">1051BP</option>';
+            Postcode6_options_str  += '<option value="1051BR">1051BR</option>';
+            Postcode6_options_str  += '<option value="1051GC">1051GC</option>';
+            Postcode6_options_str  += '<option value="1051GK">1051GK</option>';
+            Postcode6_options_str  += '<option value="1051TG">1051TG</option>';
+            Postcode6_options_str  += '<option value="1051TP">1051TP</option>';
+            Postcode6_options_str  += '<option value="1051VA">1051VA</option>';
+            Postcode6_options_str  += '<option value="1051VG">1051VG</option>';
+            Postcode6_options_str  += '<option value="1051VH">1051VH</option>';
+            Postcode6_options_str  += '<option value="1052HN">1052HN</option>';
+            Postcode6_options_str  += '<option value="1052JB">1052JB</option>';
+            Postcode6_options_str  += '<option value="1052JD">1052JD</option>';
+            Postcode6_options_str  += '<option value="1052JW">1052JW</option>';
+            Postcode6_options_str  += '<option value="1052JX">1052JX</option>';
+            Postcode6_options_str  += '<option value="1052JZ">1052JZ</option>';
+            Postcode6_options_str  += '<option value="1052KD">1052KD</option>';
+            Postcode6_options_str  += '<option value="1052KE">1052KE</option>';
+            Postcode6_options_str  += '<option value="1052KG">1052KG</option>';
+            Postcode6_options_str  += '<option value="1052KH">1052KH</option>';
+            Postcode6_options_str  += '<option value="1052KJ">1052KJ</option>';
+            Postcode6_options_str  += '<option value="1052KV">1052KV</option>';
+            Postcode6_options_str  += '<option value="1052KW">1052KW</option>';
+            Postcode6_options_str  += '<option value="1052LA">1052LA</option>';
+            Postcode6_options_str  += '<option value="1052LC">1052LC</option>';
+            Postcode6_options_str  += '<option value="1052LD">1052LD</option>';
+            Postcode6_options_str  += '<option value="1052SJ">1052SJ</option>';
+            Postcode6_options_str  += '<option value="1053AC">1053AC</option>';
+            Postcode6_options_str  += '<option value="1053BL">1053BL</option>';
+            Postcode6_options_str  += '<option value="1053BW">1053BW</option>';
+            Postcode6_options_str  += '<option value="1053BX">1053BX</option>';
+            Postcode6_options_str  += '<option value="1053BZ">1053BZ</option>';
+            Postcode6_options_str  += '<option value="1053CG">1053CG</option>';
+            Postcode6_options_str  += '<option value="1053CH">1053CH</option>';
+            Postcode6_options_str  += '<option value="1053CL">1053CL</option>';
+            Postcode6_options_str  += '<option value="1053CM">1053CM</option>';
+            Postcode6_options_str  += '<option value="1053CT">1053CT</option>';
+            Postcode6_options_str  += '<option value="1053CV">1053CV</option>';
+            Postcode6_options_str  += '<option value="1053DE">1053DE</option>';
+            Postcode6_options_str  += '<option value="1053DG">1053DG</option>';
+            Postcode6_options_str  += '<option value="1053DH">1053DH</option>';
+            Postcode6_options_str  += '<option value="1053DM">1053DM</option>';
+            Postcode6_options_str  += '<option value="1053DN">1053DN</option>';
+            Postcode6_options_str  += '<option value="1053DR">1053DR</option>';
+            Postcode6_options_str  += '<option value="1053DS">1053DS</option>';
+            Postcode6_options_str  += '<option value="1053EB">1053EB</option>';
+            Postcode6_options_str  += '<option value="1053EE">1053EE</option>';
+            Postcode6_options_str  += '<option value="1053EG">1053EG</option>';
+            Postcode6_options_str  += '<option value="1053EH">1053EH</option>';
+            Postcode6_options_str  += '<option value="1053EJ">1053EJ</option>';
+            Postcode6_options_str  += '<option value="1053EK">1053EK</option>';
+            Postcode6_options_str  += '<option value="1053EM">1053EM</option>';
+            Postcode6_options_str  += '<option value="1053EN">1053EN</option>';
+            Postcode6_options_str  += '<option value="1053ET">1053ET</option>';
+            Postcode6_options_str  += '<option value="1053EV">1053EV</option>';
+            Postcode6_options_str  += '<option value="1053GM">1053GM</option>';
+            Postcode6_options_str  += '<option value="1053GN">1053GN</option>';
+            Postcode6_options_str  += '<option value="1053GR">1053GR</option>';
+            Postcode6_options_str  += '<option value="1053GS">1053GS</option>';
+            Postcode6_options_str  += '<option value="1053GT">1053GT</option>';
+            Postcode6_options_str  += '<option value="1053HD">1053HD</option>';
+            Postcode6_options_str  += '<option value="1053HE">1053HE</option>';
+            Postcode6_options_str  += '<option value="1053HL">1053HL</option>';
+            Postcode6_options_str  += '<option value="1053HM">1053HM</option>';
+            Postcode6_options_str  += '<option value="1053JE">1053JE</option>';
+            Postcode6_options_str  += '<option value="1053JG">1053JG</option>';
+            Postcode6_options_str  += '<option value="1053KC">1053KC</option>';
+            Postcode6_options_str  += '<option value="1053KE">1053KE</option>';
+            Postcode6_options_str  += '<option value="1053KR">1053KR</option>';
+            Postcode6_options_str  += '<option value="1053KS">1053KS</option>';
+            Postcode6_options_str  += '<option value="1053KT">1053KT</option>';
+            Postcode6_options_str  += '<option value="1053LC">1053LC</option>';
+            Postcode6_options_str  += '<option value="1053LD">1053LD</option>';
+            Postcode6_options_str  += '<option value="1053LE">1053LE</option>';
+            Postcode6_options_str  += '<option value="1053LG">1053LG</option>';
+            Postcode6_options_str  += '<option value="1053ML">1053ML</option>';
+            Postcode6_options_str  += '<option value="1053NE">1053NE</option>';
+            Postcode6_options_str  += '<option value="1053NG">1053NG</option>';
+            Postcode6_options_str  += '<option value="1053NH">1053NH</option>';
+            Postcode6_options_str  += '<option value="1053PH">1053PH</option>';
+            Postcode6_options_str  += '<option value="1053PS">1053PS</option>';
+            Postcode6_options_str  += '<option value="1053PT">1053PT</option>';
+            Postcode6_options_str  += '<option value="1053RA">1053RA</option>';
+            Postcode6_options_str  += '<option value="1053RS">1053RS</option>';
+            Postcode6_options_str  += '<option value="1053RW">1053RW</option>';
+            Postcode6_options_str  += '<option value="1053VK">1053VK</option>';
+            Postcode6_options_str  += '<option value="1053VL">1053VL</option>';
+            Postcode6_options_str  += '<option value="1053XD">1053XD</option>';
+            Postcode6_options_str  += '<option value="1053XG">1053XG</option>';
+            Postcode6_options_str  += '<option value="1054AJ">1054AJ</option>';
+            Postcode6_options_str  += '<option value="1054AP">1054AP</option>';
+            Postcode6_options_str  += '<option value="1054AV">1054AV</option>';
+            Postcode6_options_str  += '<option value="1054BD">1054BD</option>';
+            Postcode6_options_str  += '<option value="1054BE">1054BE</option>';
+            Postcode6_options_str  += '<option value="1054BL">1054BL</option>';
+            Postcode6_options_str  += '<option value="1054BM">1054BM</option>';
+            Postcode6_options_str  += '<option value="1054BN">1054BN</option>';
+            Postcode6_options_str  += '<option value="1054BP">1054BP</option>';
+            Postcode6_options_str  += '<option value="1054BR">1054BR</option>';
+            Postcode6_options_str  += '<option value="1054BS">1054BS</option>';
+            Postcode6_options_str  += '<option value="1054BT">1054BT</option>';
+            Postcode6_options_str  += '<option value="1054BW">1054BW</option>';
+            Postcode6_options_str  += '<option value="1054CE">1054CE</option>';
+            Postcode6_options_str  += '<option value="1054CG">1054CG</option>';
+            Postcode6_options_str  += '<option value="1054CN">1054CN</option>';
+            Postcode6_options_str  += '<option value="1054DA">1054DA</option>';
+            Postcode6_options_str  += '<option value="1054DB">1054DB</option>';
+            Postcode6_options_str  += '<option value="1054DJ">1054DJ</option>';
+            Postcode6_options_str  += '<option value="1054DK">1054DK</option>';
+            Postcode6_options_str  += '<option value="1054DX">1054DX</option>';
+            Postcode6_options_str  += '<option value="1054DZ">1054DZ</option>';
+            Postcode6_options_str  += '<option value="1054EC">1054EC</option>';
+            Postcode6_options_str  += '<option value="1054ED">1054ED</option>';
+            Postcode6_options_str  += '<option value="1054EE">1054EE</option>';
+            Postcode6_options_str  += '<option value="1054EK">1054EK</option>';
+            Postcode6_options_str  += '<option value="1054EL">1054EL</option>';
+            Postcode6_options_str  += '<option value="1054EP">1054EP</option>';
+            Postcode6_options_str  += '<option value="1054ER">1054ER</option>';
+            Postcode6_options_str  += '<option value="1054HB">1054HB</option>';
+            Postcode6_options_str  += '<option value="1054HC">1054HC</option>';
+            Postcode6_options_str  += '<option value="1054HJ">1054HJ</option>';
+            Postcode6_options_str  += '<option value="1054HK">1054HK</option>';
+            Postcode6_options_str  += '<option value="1054HL">1054HL</option>';
+            Postcode6_options_str  += '<option value="1054HS">1054HS</option>';
+            Postcode6_options_str  += '<option value="1054JE">1054JE</option>';
+            Postcode6_options_str  += '<option value="1054JR">1054JR</option>';
+            Postcode6_options_str  += '<option value="1054JS">1054JS</option>';
+            Postcode6_options_str  += '<option value="1054JX">1054JX</option>';
+            Postcode6_options_str  += '<option value="1054JZ">1054JZ</option>';
+            Postcode6_options_str  += '<option value="1054KD">1054KD</option>';
+            Postcode6_options_str  += '<option value="1054KE">1054KE</option>';
+            Postcode6_options_str  += '<option value="1054KG">1054KG</option>';
+            Postcode6_options_str  += '<option value="1054KH">1054KH</option>';
+            Postcode6_options_str  += '<option value="1054KJ">1054KJ</option>';
+            Postcode6_options_str  += '<option value="1054KK">1054KK</option>';
+            Postcode6_options_str  += '<option value="1054KL">1054KL</option>';
+            Postcode6_options_str  += '<option value="1054KM">1054KM</option>';
+            Postcode6_options_str  += '<option value="1054KP">1054KP</option>';
+            Postcode6_options_str  += '<option value="1054KT">1054KT</option>';
+            Postcode6_options_str  += '<option value="1054KV">1054KV</option>';
+            Postcode6_options_str  += '<option value="1054KW">1054KW</option>';
+            Postcode6_options_str  += '<option value="1054KZ">1054KZ</option>';
+            Postcode6_options_str  += '<option value="1054LA">1054LA</option>';
+            Postcode6_options_str  += '<option value="1054MD">1054MD</option>';
+            Postcode6_options_str  += '<option value="1054ME">1054ME</option>';
+            Postcode6_options_str  += '<option value="1054MG">1054MG</option>';
+            Postcode6_options_str  += '<option value="1054MH">1054MH</option>';
+            Postcode6_options_str  += '<option value="1054MJ">1054MJ</option>';
+            Postcode6_options_str  += '<option value="1054MK">1054MK</option>';
+            Postcode6_options_str  += '<option value="1054ML">1054ML</option>';
+            Postcode6_options_str  += '<option value="1054MN">1054MN</option>';
+            Postcode6_options_str  += '<option value="1054MR">1054MR</option>';
+            Postcode6_options_str  += '<option value="1054MS">1054MS</option>';
+            Postcode6_options_str  += '<option value="1054MX">1054MX</option>';
+            Postcode6_options_str  += '<option value="1054TE">1054TE</option>';
+            Postcode6_options_str  += '<option value="1054TG">1054TG</option>';
+            Postcode6_options_str  += '<option value="1054TW">1054TW</option>';
+            Postcode6_options_str  += '<option value="1054VA">1054VA</option>';
+            Postcode6_options_str  += '<option value="1054VB">1054VB</option>';
+            Postcode6_options_str  += '<option value="1054VC">1054VC</option>';
+            Postcode6_options_str  += '<option value="1054VE">1054VE</option>';
+            Postcode6_options_str  += '<option value="1054VH">1054VH</option>';
+            Postcode6_options_str  += '<option value="1054VW">1054VW</option>';
+            Postcode6_options_str  += '<option value="1054VX">1054VX</option>';
+            Postcode6_options_str  += '<option value="1054WC">1054WC</option>';
+            Postcode6_options_str  += '<option value="1054WK">1054WK</option>';
+            Postcode6_options_str  += '<option value="1054WL">1054WL</option>';
+            Postcode6_options_str  += '<option value="1054WR">1054WR</option>';
+            Postcode6_options_str  += '<option value="1054WZ">1054WZ</option>';
+            Postcode6_options_str  += '<option value="1054XA">1054XA</option>';
+            Postcode6_options_str  += '<option value="1054XB">1054XB</option>';
+            Postcode6_options_str  += '<option value="1054XJ">1054XJ</option>';
+            Postcode6_options_str  += '<option value="1054XK">1054XK</option>';
+            Postcode6_options_str  += '<option value="1054XL">1054XL</option>';
+            Postcode6_options_str  += '<option value="1054ZG">1054ZG</option>';
+            Postcode6_options_str  += '<option value="1054ZL">1054ZL</option>';
+            Postcode6_options_str  += '<option value="1054ZM">1054ZM</option>';
+            Postcode6_options_str  += '<option value="1054ZN">1054ZN</option>';
+            Postcode6_options_str  += '<option value="1055DP">1055DP</option>';
+            Postcode6_options_str  += '<option value="1055DR">1055DR</option>';
+            Postcode6_options_str  += '<option value="1055DS">1055DS</option>';
+            Postcode6_options_str  += '<option value="1055DZ">1055DZ</option>';
+            Postcode6_options_str  += '<option value="1055EA">1055EA</option>';
+            Postcode6_options_str  += '<option value="1055EC">1055EC</option>';
+            Postcode6_options_str  += '<option value="1055ED">1055ED</option>';
+            Postcode6_options_str  += '<option value="1055EE">1055EE</option>';
+            Postcode6_options_str  += '<option value="1055EG">1055EG</option>';
+            Postcode6_options_str  += '<option value="1055EL">1055EL</option>';
+            Postcode6_options_str  += '<option value="1055HA">1055HA</option>';
+            Postcode6_options_str  += '<option value="1055LZ">1055LZ</option>';
+            Postcode6_options_str  += '<option value="1055MX">1055MX</option>';
+            Postcode6_options_str  += '<option value="1055MZ">1055MZ</option>';
+            Postcode6_options_str  += '<option value="1055RC">1055RC</option>';
+            Postcode6_options_str  += '<option value="1056BJ">1056BJ</option>';
+            Postcode6_options_str  += '<option value="1056BK">1056BK</option>';
+            Postcode6_options_str  += '<option value="1056CC">1056CC</option>';
+            Postcode6_options_str  += '<option value="1056CD">1056CD</option>';
+            Postcode6_options_str  += '<option value="1056CE">1056CE</option>';
+            Postcode6_options_str  += '<option value="1056GK">1056GK</option>';
+            Postcode6_options_str  += '<option value="1056GL">1056GL</option>';
+            Postcode6_options_str  += '<option value="1056HJ">1056HJ</option>';
+            Postcode6_options_str  += '<option value="1056HX">1056HX</option>';
+            Postcode6_options_str  += '<option value="1056JD">1056JD</option>';
+            Postcode6_options_str  += '<option value="1056WH">1056WH</option>';
+            Postcode6_options_str  += '<option value="1056WJ">1056WJ</option>';
+            Postcode6_options_str  += '<option value="1056WV">1056WV</option>';
+            Postcode6_options_str  += '<option value="1056WX">1056WX</option>';
+            Postcode6_options_str  += '<option value="1056WZ">1056WZ</option>';
+            Postcode6_options_str  += '<option value="1056XB">1056XB</option>';
+            Postcode6_options_str  += '<option value="1056XC">1056XC</option>';
+            Postcode6_options_str  += '<option value="1056XD">1056XD</option>';
+            Postcode6_options_str  += '<option value="1057BK">1057BK</option>';
+            Postcode6_options_str  += '<option value="1057BV">1057BV</option>';
+            Postcode6_options_str  += '<option value="1057CB">1057CB</option>';
+            Postcode6_options_str  += '<option value="1057CC">1057CC</option>';
+            Postcode6_options_str  += '<option value="1057JW">1057JW</option>';
+            Postcode6_options_str  += '<option value="1058AH">1058AH</option>';
+            Postcode6_options_str  += '<option value="1058GJ">1058GJ</option>';
+            Postcode6_options_str  += '<option value="1058GK">1058GK</option>';
+            Postcode6_options_str  += '<option value="1058GL">1058GL</option>';
+            Postcode6_options_str  += '<option value="1058GP">1058GP</option>';
+            Postcode6_options_str  += '<option value="1058HD">1058HD</option>';
+            Postcode6_options_str  += '<option value="1058NM">1058NM</option>';
+            Postcode6_options_str  += '<option value="1058NN">1058NN</option>';
+            Postcode6_options_str  += '<option value="1058PC">1058PC</option>';
+            Postcode6_options_str  += '<option value="1058PD">1058PD</option>';
+            Postcode6_options_str  += '<option value="1058TJ">1058TJ</option>';
+            Postcode6_options_str  += '<option value="1059CT">1059CT</option>';
+            Postcode6_options_str  += '<option value="1059CV">1059CV</option>';
+            Postcode6_options_str  += '<option value="1059CW">1059CW</option>';
+            Postcode6_options_str  += '<option value="1059CX">1059CX</option>';
+            Postcode6_options_str  += '<option value="1059CZ">1059CZ</option>';
+            Postcode6_options_str  += '<option value="1059ED">1059ED</option>';
+            Postcode6_options_str  += '<option value="1059EH">1059EH</option>';
+            Postcode6_options_str  += '<option value="1059XR">1059XR</option>';
+            Postcode6_options_str  += '<option value="1059XW">1059XW</option>';
+            Postcode6_options_str  += '<option value="1063BX">1063BX</option>';
+            Postcode6_options_str  += '<option value="1063BZ">1063BZ</option>';
+            Postcode6_options_str  += '<option value="1063CP">1063CP</option>';
+            Postcode6_options_str  += '<option value="1063CV">1063CV</option>';
+            Postcode6_options_str  += '<option value="1063HR">1063HR</option>';
+            Postcode6_options_str  += '<option value="1063HS">1063HS</option>';
+            Postcode6_options_str  += '<option value="1063HV">1063HV</option>';
+            Postcode6_options_str  += '<option value="1063KW">1063KW</option>';
+            Postcode6_options_str  += '<option value="1063NZ">1063NZ</option>';
+            Postcode6_options_str  += '<option value="1063PJ">1063PJ</option>';
+            Postcode6_options_str  += '<option value="1063PK">1063PK</option>';
+            Postcode6_options_str  += '<option value="1063TN">1063TN</option>';
+            Postcode6_options_str  += '<option value="1063TR">1063TR</option>';
+            Postcode6_options_str  += '<option value="1063TS">1063TS</option>';
+            Postcode6_options_str  += '<option value="1063VZ">1063VZ</option>';
+            Postcode6_options_str  += '<option value="1063XC">1063XC</option>';
+            Postcode6_options_str  += '<option value="1064KN">1064KN</option>';
+            Postcode6_options_str  += '<option value="1064LA">1064LA</option>';
+            Postcode6_options_str  += '<option value="1065BX">1065BX</option>';
+            Postcode6_options_str  += '<option value="1065CW">1065CW</option>';
+            Postcode6_options_str  += '<option value="1065GP">1065GP</option>';
+            Postcode6_options_str  += '<option value="1065GR">1065GR</option>';
+            Postcode6_options_str  += '<option value="1065JN">1065JN</option>';
+            Postcode6_options_str  += '<option value="1065KJ">1065KJ</option>';
+            Postcode6_options_str  += '<option value="1065KN">1065KN</option>';
+            Postcode6_options_str  += '<option value="1066RB">1066RB</option>';
+            Postcode6_options_str  += '<option value="1066RC">1066RC</option>';
+            Postcode6_options_str  += '<option value="1066RD">1066RD</option>';
+            Postcode6_options_str  += '<option value="1068EK">1068EK</option>';
+            Postcode6_options_str  += '<option value="1068EM">1068EM</option>';
+            Postcode6_options_str  += '<option value="1068EZ">1068EZ</option>';
+            Postcode6_options_str  += '<option value="1068GA">1068GA</option>';
+            Postcode6_options_str  += '<option value="1068GB">1068GB</option>';
+            Postcode6_options_str  += '<option value="1068GC">1068GC</option>';
+            Postcode6_options_str  += '<option value="1068GD">1068GD</option>';
+            Postcode6_options_str  += '<option value="1068GE">1068GE</option>';
+            Postcode6_options_str  += '<option value="1068GG">1068GG</option>';
+            Postcode6_options_str  += '<option value="1068GH">1068GH</option>';
+            Postcode6_options_str  += '<option value="1068GJ">1068GJ</option>';
+            Postcode6_options_str  += '<option value="1068GK">1068GK</option>';
+            Postcode6_options_str  += '<option value="1068KB">1068KB</option>';
+            Postcode6_options_str  += '<option value="1068NH">1068NH</option>';
+            Postcode6_options_str  += '<option value="1068NP">1068NP</option>';
+            Postcode6_options_str  += '<option value="1068NR">1068NR</option>';
+            Postcode6_options_str  += '<option value="1068TC">1068TC</option>';
+            Postcode6_options_str  += '<option value="1068TD">1068TD</option>';
+            Postcode6_options_str  += '<option value="1071AR">1071AR</option>';
+            Postcode6_options_str  += '<option value="1071BC">1071BC</option>';
+            Postcode6_options_str  += '<option value="1071BD">1071BD</option>';
+            Postcode6_options_str  += '<option value="1071BJ">1071BJ</option>';
+            Postcode6_options_str  += '<option value="1071BK">1071BK</option>';
+            Postcode6_options_str  += '<option value="1071LT">1071LT</option>';
+            Postcode6_options_str  += '<option value="1071LX">1071LX</option>';
+            Postcode6_options_str  += '<option value="1072AE">1072AE</option>';
+            Postcode6_options_str  += '<option value="1072BC">1072BC</option>';
+            Postcode6_options_str  += '<option value="1072BD">1072BD</option>';
+            Postcode6_options_str  += '<option value="1072BG">1072BG</option>';
+            Postcode6_options_str  += '<option value="1072BH">1072BH</option>';
+            Postcode6_options_str  += '<option value="1072BJ">1072BJ</option>';
+            Postcode6_options_str  += '<option value="1072BK">1072BK</option>';
+            Postcode6_options_str  += '<option value="1072BL">1072BL</option>';
+            Postcode6_options_str  += '<option value="1072BM">1072BM</option>';
+            Postcode6_options_str  += '<option value="1072BN">1072BN</option>';
+            Postcode6_options_str  += '<option value="1072BP">1072BP</option>';
+            Postcode6_options_str  += '<option value="1072BW">1072BW</option>';
+            Postcode6_options_str  += '<option value="1072BX">1072BX</option>';
+            Postcode6_options_str  += '<option value="1072BZ">1072BZ</option>';
+            Postcode6_options_str  += '<option value="1072CC">1072CC</option>';
+            Postcode6_options_str  += '<option value="1072CD">1072CD</option>';
+            Postcode6_options_str  += '<option value="1072CH">1072CH</option>';
+            Postcode6_options_str  += '<option value="1072CJ">1072CJ</option>';
+            Postcode6_options_str  += '<option value="1072CK">1072CK</option>';
+            Postcode6_options_str  += '<option value="1072CL">1072CL</option>';
+            Postcode6_options_str  += '<option value="1072CM">1072CM</option>';
+            Postcode6_options_str  += '<option value="1072CN">1072CN</option>';
+            Postcode6_options_str  += '<option value="1072CP">1072CP</option>';
+            Postcode6_options_str  += '<option value="1072CR">1072CR</option>';
+            Postcode6_options_str  += '<option value="1072CS">1072CS</option>';
+            Postcode6_options_str  += '<option value="1072CT">1072CT</option>';
+            Postcode6_options_str  += '<option value="1072CV">1072CV</option>';
+            Postcode6_options_str  += '<option value="1072CW">1072CW</option>';
+            Postcode6_options_str  += '<option value="1072CX">1072CX</option>';
+            Postcode6_options_str  += '<option value="1072CZ">1072CZ</option>';
+            Postcode6_options_str  += '<option value="1072EA">1072EA</option>';
+            Postcode6_options_str  += '<option value="1072EC">1072EC</option>';
+            Postcode6_options_str  += '<option value="1072ED">1072ED</option>';
+            Postcode6_options_str  += '<option value="1072EE">1072EE</option>';
+            Postcode6_options_str  += '<option value="1072EG">1072EG</option>';
+            Postcode6_options_str  += '<option value="1072EH">1072EH</option>';
+            Postcode6_options_str  += '<option value="1072EJ">1072EJ</option>';
+            Postcode6_options_str  += '<option value="1072EK">1072EK</option>';
+            Postcode6_options_str  += '<option value="1072EL">1072EL</option>';
+            Postcode6_options_str  += '<option value="1072EM">1072EM</option>';
+            Postcode6_options_str  += '<option value="1072EN">1072EN</option>';
+            Postcode6_options_str  += '<option value="1072EP">1072EP</option>';
+            Postcode6_options_str  += '<option value="1072ER">1072ER</option>';
+            Postcode6_options_str  += '<option value="1072ES">1072ES</option>';
+            Postcode6_options_str  += '<option value="1072ET">1072ET</option>';
+            Postcode6_options_str  += '<option value="1072EV">1072EV</option>';
+            Postcode6_options_str  += '<option value="1072EW">1072EW</option>';
+            Postcode6_options_str  += '<option value="1072EX">1072EX</option>';
+            Postcode6_options_str  += '<option value="1072EZ">1072EZ</option>';
+            Postcode6_options_str  += '<option value="1072GA">1072GA</option>';
+            Postcode6_options_str  += '<option value="1072GB">1072GB</option>';
+            Postcode6_options_str  += '<option value="1072GC">1072GC</option>';
+            Postcode6_options_str  += '<option value="1072GD">1072GD</option>';
+            Postcode6_options_str  += '<option value="1072GE">1072GE</option>';
+            Postcode6_options_str  += '<option value="1072GG">1072GG</option>';
+            Postcode6_options_str  += '<option value="1072GH">1072GH</option>';
+            Postcode6_options_str  += '<option value="1072GJ">1072GJ</option>';
+            Postcode6_options_str  += '<option value="1072GK">1072GK</option>';
+            Postcode6_options_str  += '<option value="1072GL">1072GL</option>';
+            Postcode6_options_str  += '<option value="1072GM">1072GM</option>';
+            Postcode6_options_str  += '<option value="1072GN">1072GN</option>';
+            Postcode6_options_str  += '<option value="1072GV">1072GV</option>';
+            Postcode6_options_str  += '<option value="1072GW">1072GW</option>';
+            Postcode6_options_str  += '<option value="1072HE">1072HE</option>';
+            Postcode6_options_str  += '<option value="1072HG">1072HG</option>';
+            Postcode6_options_str  += '<option value="1072HH">1072HH</option>';
+            Postcode6_options_str  += '<option value="1072HL">1072HL</option>';
+            Postcode6_options_str  += '<option value="1072HM">1072HM</option>';
+            Postcode6_options_str  += '<option value="1072HR">1072HR</option>';
+            Postcode6_options_str  += '<option value="1072HS">1072HS</option>';
+            Postcode6_options_str  += '<option value="1072JJ">1072JJ</option>';
+            Postcode6_options_str  += '<option value="1072JK">1072JK</option>';
+            Postcode6_options_str  += '<option value="1072LA">1072LA</option>';
+            Postcode6_options_str  += '<option value="1072LB">1072LB</option>';
+            Postcode6_options_str  += '<option value="1072LC">1072LC</option>';
+            Postcode6_options_str  += '<option value="1072LD">1072LD</option>';
+            Postcode6_options_str  += '<option value="1072LE">1072LE</option>';
+            Postcode6_options_str  += '<option value="1072LG">1072LG</option>';
+            Postcode6_options_str  += '<option value="1072LJ">1072LJ</option>';
+            Postcode6_options_str  += '<option value="1072LK">1072LK</option>';
+            Postcode6_options_str  += '<option value="1072LL">1072LL</option>';
+            Postcode6_options_str  += '<option value="1072LM">1072LM</option>';
+            Postcode6_options_str  += '<option value="1072LN">1072LN</option>';
+            Postcode6_options_str  += '<option value="1072LP">1072LP</option>';
+            Postcode6_options_str  += '<option value="1072LR">1072LR</option>';
+            Postcode6_options_str  += '<option value="1072LS">1072LS</option>';
+            Postcode6_options_str  += '<option value="1072LT">1072LT</option>';
+            Postcode6_options_str  += '<option value="1072LV">1072LV</option>';
+            Postcode6_options_str  += '<option value="1072MH">1072MH</option>';
+            Postcode6_options_str  += '<option value="1072ML">1072ML</option>';
+            Postcode6_options_str  += '<option value="1072MN">1072MN</option>';
+            Postcode6_options_str  += '<option value="1072NC">1072NC</option>';
+            Postcode6_options_str  += '<option value="1072NE">1072NE</option>';
+            Postcode6_options_str  += '<option value="1072NG">1072NG</option>';
+            Postcode6_options_str  += '<option value="1072NJ">1072NJ</option>';
+            Postcode6_options_str  += '<option value="1072NP">1072NP</option>';
+            Postcode6_options_str  += '<option value="1072NS">1072NS</option>';
+            Postcode6_options_str  += '<option value="1072NT">1072NT</option>';
+            Postcode6_options_str  += '<option value="1072NX">1072NX</option>';
+            Postcode6_options_str  += '<option value="1072NZ">1072NZ</option>';
+            Postcode6_options_str  += '<option value="1072PA">1072PA</option>';
+            Postcode6_options_str  += '<option value="1072PB">1072PB</option>';
+            Postcode6_options_str  += '<option value="1072PC">1072PC</option>';
+            Postcode6_options_str  += '<option value="1072SN">1072SN</option>';
+            Postcode6_options_str  += '<option value="1072SP">1072SP</option>';
+            Postcode6_options_str  += '<option value="1072SR">1072SR</option>';
+            Postcode6_options_str  += '<option value="1072ST">1072ST</option>';
+            Postcode6_options_str  += '<option value="1072SV">1072SV</option>';
+            Postcode6_options_str  += '<option value="1072SW">1072SW</option>';
+            Postcode6_options_str  += '<option value="1072TB">1072TB</option>';
+            Postcode6_options_str  += '<option value="1072TC">1072TC</option>';
+            Postcode6_options_str  += '<option value="1072TH">1072TH</option>';
+            Postcode6_options_str  += '<option value="1072TN">1072TN</option>';
+            Postcode6_options_str  += '<option value="1072TP">1072TP</option>';
+            Postcode6_options_str  += '<option value="1072TR">1072TR</option>';
+            Postcode6_options_str  += '<option value="1072TS">1072TS</option>';
+            Postcode6_options_str  += '<option value="1072TT">1072TT</option>';
+            Postcode6_options_str  += '<option value="1072TV">1072TV</option>';
+            Postcode6_options_str  += '<option value="1072TZ">1072TZ</option>';
+            Postcode6_options_str  += '<option value="1072VA">1072VA</option>';
+            Postcode6_options_str  += '<option value="1072VB">1072VB</option>';
+            Postcode6_options_str  += '<option value="1072VC">1072VC</option>';
+            Postcode6_options_str  += '<option value="1072VD">1072VD</option>';
+            Postcode6_options_str  += '<option value="1072VE">1072VE</option>';
+            Postcode6_options_str  += '<option value="1072VH">1072VH</option>';
+            Postcode6_options_str  += '<option value="1072VJ">1072VJ</option>';
+            Postcode6_options_str  += '<option value="1072VK">1072VK</option>';
+            Postcode6_options_str  += '<option value="1072VL">1072VL</option>';
+            Postcode6_options_str  += '<option value="1072VM">1072VM</option>';
+            Postcode6_options_str  += '<option value="1072VN">1072VN</option>';
+            Postcode6_options_str  += '<option value="1072VR">1072VR</option>';
+            Postcode6_options_str  += '<option value="1072VS">1072VS</option>';
+            Postcode6_options_str  += '<option value="1072VT">1072VT</option>';
+            Postcode6_options_str  += '<option value="1072VV">1072VV</option>';
+            Postcode6_options_str  += '<option value="1072VW">1072VW</option>';
+            Postcode6_options_str  += '<option value="1072VX">1072VX</option>';
+            Postcode6_options_str  += '<option value="1072XA">1072XA</option>';
+            Postcode6_options_str  += '<option value="1072XB">1072XB</option>';
+            Postcode6_options_str  += '<option value="1072XC">1072XC</option>';
+            Postcode6_options_str  += '<option value="1072XD">1072XD</option>';
+            Postcode6_options_str  += '<option value="1072XH">1072XH</option>';
+            Postcode6_options_str  += '<option value="1072XJ">1072XJ</option>';
+            Postcode6_options_str  += '<option value="1072XK">1072XK</option>';
+            Postcode6_options_str  += '<option value="1072XL">1072XL</option>';
+            Postcode6_options_str  += '<option value="1072XP">1072XP</option>';
+            Postcode6_options_str  += '<option value="1072XR">1072XR</option>';
+            Postcode6_options_str  += '<option value="1072XV">1072XV</option>';
+            Postcode6_options_str  += '<option value="1072XX">1072XX</option>';
+            Postcode6_options_str  += '<option value="1072XZ">1072XZ</option>';
+            Postcode6_options_str  += '<option value="1073AB">1073AB</option>';
+            Postcode6_options_str  += '<option value="1073AC">1073AC</option>';
+            Postcode6_options_str  += '<option value="1073AD">1073AD</option>';
+            Postcode6_options_str  += '<option value="1073AE">1073AE</option>';
+            Postcode6_options_str  += '<option value="1073AZ">1073AZ</option>';
+            Postcode6_options_str  += '<option value="1073BA">1073BA</option>';
+            Postcode6_options_str  += '<option value="1073BC">1073BC</option>';
+            Postcode6_options_str  += '<option value="1073BG">1073BG</option>';
+            Postcode6_options_str  += '<option value="1073BH">1073BH</option>';
+            Postcode6_options_str  += '<option value="1073BJ">1073BJ</option>';
+            Postcode6_options_str  += '<option value="1073BN">1073BN</option>';
+            Postcode6_options_str  += '<option value="1073BP">1073BP</option>';
+            Postcode6_options_str  += '<option value="1073BR">1073BR</option>';
+            Postcode6_options_str  += '<option value="1073BS">1073BS</option>';
+            Postcode6_options_str  += '<option value="1073BW">1073BW</option>';
+            Postcode6_options_str  += '<option value="1073BX">1073BX</option>';
+            Postcode6_options_str  += '<option value="1073BZ">1073BZ</option>';
+            Postcode6_options_str  += '<option value="1073CA">1073CA</option>';
+            Postcode6_options_str  += '<option value="1073CB">1073CB</option>';
+            Postcode6_options_str  += '<option value="1073CG">1073CG</option>';
+            Postcode6_options_str  += '<option value="1073CJ">1073CJ</option>';
+            Postcode6_options_str  += '<option value="1073CK">1073CK</option>';
+            Postcode6_options_str  += '<option value="1073CM">1073CM</option>';
+            Postcode6_options_str  += '<option value="1073CN">1073CN</option>';
+            Postcode6_options_str  += '<option value="1073CZ">1073CZ</option>';
+            Postcode6_options_str  += '<option value="1073EK">1073EK</option>';
+            Postcode6_options_str  += '<option value="1073EN">1073EN</option>';
+            Postcode6_options_str  += '<option value="1073GH">1073GH</option>';
+            Postcode6_options_str  += '<option value="1073LL">1073LL</option>';
+            Postcode6_options_str  += '<option value="1073LM">1073LM</option>';
+            Postcode6_options_str  += '<option value="1073LN">1073LN</option>';
+            Postcode6_options_str  += '<option value="1073LP">1073LP</option>';
+            Postcode6_options_str  += '<option value="1073LT">1073LT</option>';
+            Postcode6_options_str  += '<option value="1073VG">1073VG</option>';
+            Postcode6_options_str  += '<option value="1073VJ">1073VJ</option>';
+            Postcode6_options_str  += '<option value="1073VM">1073VM</option>';
+            Postcode6_options_str  += '<option value="1073VP">1073VP</option>';
+            Postcode6_options_str  += '<option value="1073VR">1073VR</option>';
+            Postcode6_options_str  += '<option value="1073VS">1073VS</option>';
+            Postcode6_options_str  += '<option value="1073VX">1073VX</option>';
+            Postcode6_options_str  += '<option value="1073XB">1073XB</option>';
+            Postcode6_options_str  += '<option value="1073XC">1073XC</option>';
+            Postcode6_options_str  += '<option value="1073XE">1073XE</option>';
+            Postcode6_options_str  += '<option value="1073XG">1073XG</option>';
+            Postcode6_options_str  += '<option value="1074AA">1074AA</option>';
+            Postcode6_options_str  += '<option value="1074AB">1074AB</option>';
+            Postcode6_options_str  += '<option value="1074AC">1074AC</option>';
+            Postcode6_options_str  += '<option value="1074AD">1074AD</option>';
+            Postcode6_options_str  += '<option value="1074AE">1074AE</option>';
+            Postcode6_options_str  += '<option value="1074AG">1074AG</option>';
+            Postcode6_options_str  += '<option value="1074AH">1074AH</option>';
+            Postcode6_options_str  += '<option value="1074AV">1074AV</option>';
+            Postcode6_options_str  += '<option value="1074AW">1074AW</option>';
+            Postcode6_options_str  += '<option value="1074AX">1074AX</option>';
+            Postcode6_options_str  += '<option value="1074BE">1074BE</option>';
+            Postcode6_options_str  += '<option value="1074BG">1074BG</option>';
+            Postcode6_options_str  += '<option value="1074CA">1074CA</option>';
+            Postcode6_options_str  += '<option value="1074CE">1074CE</option>';
+            Postcode6_options_str  += '<option value="1074CK">1074CK</option>';
+            Postcode6_options_str  += '<option value="1074CL">1074CL</option>';
+            Postcode6_options_str  += '<option value="1074CP">1074CP</option>';
+            Postcode6_options_str  += '<option value="1074CV">1074CV</option>';
+            Postcode6_options_str  += '<option value="1074EJ">1074EJ</option>';
+            Postcode6_options_str  += '<option value="1074EN">1074EN</option>';
+            Postcode6_options_str  += '<option value="1074VA">1074VA</option>';
+            Postcode6_options_str  += '<option value="1074VV">1074VV</option>';
+            Postcode6_options_str  += '<option value="1074XN">1074XN</option>';
+            Postcode6_options_str  += '<option value="1074XP">1074XP</option>';
+            Postcode6_options_str  += '<option value="1074XV">1074XV</option>';
+            Postcode6_options_str  += '<option value="1075BS">1075BS</option>';
+            Postcode6_options_str  += '<option value="1075CC">1075CC</option>';
+            Postcode6_options_str  += '<option value="1075CE">1075CE</option>';
+            Postcode6_options_str  += '<option value="1075CV">1075CV</option>';
+            Postcode6_options_str  += '<option value="1075CW">1075CW</option>';
+            Postcode6_options_str  += '<option value="1075EL">1075EL</option>';
+            Postcode6_options_str  += '<option value="1075EM">1075EM</option>';
+            Postcode6_options_str  += '<option value="1075GB">1075GB</option>';
+            Postcode6_options_str  += '<option value="1075GN">1075GN</option>';
+            Postcode6_options_str  += '<option value="1075GP">1075GP</option>';
+            Postcode6_options_str  += '<option value="1075RH">1075RH</option>';
+            Postcode6_options_str  += '<option value="1075TN">1075TN</option>';
+            Postcode6_options_str  += '<option value="1075TV">1075TV</option>';
+            Postcode6_options_str  += '<option value="1075TX">1075TX</option>';
+            Postcode6_options_str  += '<option value="1075VT">1075VT</option>';
+            Postcode6_options_str  += '<option value="1075VV">1075VV</option>';
+            Postcode6_options_str  += '<option value="1075VW">1075VW</option>';
+            Postcode6_options_str  += '<option value="1075VX">1075VX</option>';
+            Postcode6_options_str  += '<option value="1075VZ">1075VZ</option>';
+            Postcode6_options_str  += '<option value="1075XM">1075XM</option>';
+            Postcode6_options_str  += '<option value="1075XN">1075XN</option>';
+            Postcode6_options_str  += '<option value="1075XS">1075XS</option>';
+            Postcode6_options_str  += '<option value="1076CE">1076CE</option>';
+            Postcode6_options_str  += '<option value="1076CK">1076CK</option>';
+            Postcode6_options_str  += '<option value="1076JS">1076JS</option>';
+            Postcode6_options_str  += '<option value="1076JT">1076JT</option>';
+            Postcode6_options_str  += '<option value="1076JV">1076JV</option>';
+            Postcode6_options_str  += '<option value="1076KW">1076KW</option>';
+            Postcode6_options_str  += '<option value="1076LA">1076LA</option>';
+            Postcode6_options_str  += '<option value="1076NX">1076NX</option>';
+            Postcode6_options_str  += '<option value="1076NZ">1076NZ</option>';
+            Postcode6_options_str  += '<option value="1076PA">1076PA</option>';
+            Postcode6_options_str  += '<option value="1077HN">1077HN</option>';
+            Postcode6_options_str  += '<option value="1077JL">1077JL</option>';
+            Postcode6_options_str  += '<option value="1077JM">1077JM</option>';
+            Postcode6_options_str  += '<option value="1078GH">1078GH</option>';
+            Postcode6_options_str  += '<option value="1078GJ">1078GJ</option>';
+            Postcode6_options_str  += '<option value="1078GN">1078GN</option>';
+            Postcode6_options_str  += '<option value="1078GP">1078GP</option>';
+            Postcode6_options_str  += '<option value="1078GR">1078GR</option>';
+            Postcode6_options_str  += '<option value="1078HE">1078HE</option>';
+            Postcode6_options_str  += '<option value="1078HL">1078HL</option>';
+            Postcode6_options_str  += '<option value="1078JR">1078JR</option>';
+            Postcode6_options_str  += '<option value="1078KW">1078KW</option>';
+            Postcode6_options_str  += '<option value="1078LA">1078LA</option>';
+            Postcode6_options_str  += '<option value="1078MB">1078MB</option>';
+            Postcode6_options_str  += '<option value="1078MJ">1078MJ</option>';
+            Postcode6_options_str  += '<option value="1078XN">1078XN</option>';
+            Postcode6_options_str  += '<option value="1078XS">1078XS</option>';
+            Postcode6_options_str  += '<option value="1078XW">1078XW</option>';
+            Postcode6_options_str  += '<option value="1079ES">1079ES</option>';
+            Postcode6_options_str  += '<option value="1079GW">1079GW</option>';
+            Postcode6_options_str  += '<option value="1079GX">1079GX</option>';
+            Postcode6_options_str  += '<option value="1079JA">1079JA</option>';
+            Postcode6_options_str  += '<option value="1079JK">1079JK</option>';
+            Postcode6_options_str  += '<option value="1079JL">1079JL</option>';
+            Postcode6_options_str  += '<option value="1079JM">1079JM</option>';
+            Postcode6_options_str  += '<option value="1079KH">1079KH</option>';
+            Postcode6_options_str  += '<option value="1079VK">1079VK</option>';
+            Postcode6_options_str  += '<option value="1081AA">1081AA</option>';
+            Postcode6_options_str  += '<option value="1081HH">1081HH</option>';
+            Postcode6_options_str  += '<option value="1082MK">1082MK</option>';
+            Postcode6_options_str  += '<option value="1083AL">1083AL</option>';
+            Postcode6_options_str  += '<option value="1083AM">1083AM</option>';
+            Postcode6_options_str  += '<option value="1083AN">1083AN</option>';
+            Postcode6_options_str  += '<option value="1091AH">1091AH</option>';
+            Postcode6_options_str  += '<option value="1091AJ">1091AJ</option>';
+            Postcode6_options_str  += '<option value="1091CJ">1091CJ</option>';
+            Postcode6_options_str  += '<option value="1091CP">1091CP</option>';
+            Postcode6_options_str  += '<option value="1091CR">1091CR</option>';
+            Postcode6_options_str  += '<option value="1091CW">1091CW</option>';
+            Postcode6_options_str  += '<option value="1091CZ">1091CZ</option>';
+            Postcode6_options_str  += '<option value="1091EE">1091EE</option>';
+            Postcode6_options_str  += '<option value="1091GT">1091GT</option>';
+            Postcode6_options_str  += '<option value="1091HB">1091HB</option>';
+            Postcode6_options_str  += '<option value="1091HE">1091HE</option>';
+            Postcode6_options_str  += '<option value="1091JJ">1091JJ</option>';
+            Postcode6_options_str  += '<option value="1091JK">1091JK</option>';
+            Postcode6_options_str  += '<option value="1091JW">1091JW</option>';
+            Postcode6_options_str  += '<option value="1091KC">1091KC</option>';
+            Postcode6_options_str  += '<option value="1091KD">1091KD</option>';
+            Postcode6_options_str  += '<option value="1091KE">1091KE</option>';
+            Postcode6_options_str  += '<option value="1091KG">1091KG</option>';
+            Postcode6_options_str  += '<option value="1091KH">1091KH</option>';
+            Postcode6_options_str  += '<option value="1091VD">1091VD</option>';
+            Postcode6_options_str  += '<option value="1091VE">1091VE</option>';
+            Postcode6_options_str  += '<option value="1091VK">1091VK</option>';
+            Postcode6_options_str  += '<option value="1091VL">1091VL</option>';
+            Postcode6_options_str  += '<option value="1092AX">1092AX</option>';
+            Postcode6_options_str  += '<option value="1092AZ">1092AZ</option>';
+            Postcode6_options_str  += '<option value="1092BB">1092BB</option>';
+            Postcode6_options_str  += '<option value="1092BC">1092BC</option>';
+            Postcode6_options_str  += '<option value="1092BD">1092BD</option>';
+            Postcode6_options_str  += '<option value="1092BP">1092BP</option>';
+            Postcode6_options_str  += '<option value="1092CN">1092CN</option>';
+            Postcode6_options_str  += '<option value="1092CP">1092CP</option>';
+            Postcode6_options_str  += '<option value="1092CR">1092CR</option>';
+            Postcode6_options_str  += '<option value="1092CS">1092CS</option>';
+            Postcode6_options_str  += '<option value="1092EB">1092EB</option>';
+            Postcode6_options_str  += '<option value="1092EW">1092EW</option>';
+            Postcode6_options_str  += '<option value="1092EX">1092EX</option>';
+            Postcode6_options_str  += '<option value="1092GE">1092GE</option>';
+            Postcode6_options_str  += '<option value="1092HK">1092HK</option>';
+            Postcode6_options_str  += '<option value="1092HL">1092HL</option>';
+            Postcode6_options_str  += '<option value="1092TA">1092TA</option>';
+            Postcode6_options_str  += '<option value="1092TM">1092TM</option>';
+            Postcode6_options_str  += '<option value="1092VR">1092VR</option>';
+            Postcode6_options_str  += '<option value="1093BP">1093BP</option>';
+            Postcode6_options_str  += '<option value="1093BS">1093BS</option>';
+            Postcode6_options_str  += '<option value="1093BX">1093BX</option>';
+            Postcode6_options_str  += '<option value="1093CS">1093CS</option>';
+            Postcode6_options_str  += '<option value="1093CX">1093CX</option>';
+            Postcode6_options_str  += '<option value="1093EB">1093EB</option>';
+            Postcode6_options_str  += '<option value="1093EJ">1093EJ</option>';
+            Postcode6_options_str  += '<option value="1093EK">1093EK</option>';
+            Postcode6_options_str  += '<option value="1093EN">1093EN</option>';
+            Postcode6_options_str  += '<option value="1093EP">1093EP</option>';
+            Postcode6_options_str  += '<option value="1093ER">1093ER</option>';
+            Postcode6_options_str  += '<option value="1093GE">1093GE</option>';
+            Postcode6_options_str  += '<option value="1093GG">1093GG</option>';
+            Postcode6_options_str  += '<option value="1093GH">1093GH</option>';
+            Postcode6_options_str  += '<option value="1093GJ">1093GJ</option>';
+            Postcode6_options_str  += '<option value="1093GN">1093GN</option>';
+            Postcode6_options_str  += '<option value="1093GR">1093GR</option>';
+            Postcode6_options_str  += '<option value="1093GZ">1093GZ</option>';
+            Postcode6_options_str  += '<option value="1093HA">1093HA</option>';
+            Postcode6_options_str  += '<option value="1093HR">1093HR</option>';
+            Postcode6_options_str  += '<option value="1093JB">1093JB</option>';
+            Postcode6_options_str  += '<option value="1093JL">1093JL</option>';
+            Postcode6_options_str  += '<option value="1093NA">1093NA</option>';
+            Postcode6_options_str  += '<option value="1093VH">1093VH</option>';
+            Postcode6_options_str  += '<option value="1093VJ">1093VJ</option>';
+            Postcode6_options_str  += '<option value="1093VK">1093VK</option>';
+            Postcode6_options_str  += '<option value="1093VL">1093VL</option>';
+            Postcode6_options_str  += '<option value="1093XH">1093XH</option>';
+            Postcode6_options_str  += '<option value="1093XS">1093XS</option>';
+            Postcode6_options_str  += '<option value="1094GP">1094GP</option>';
+            Postcode6_options_str  += '<option value="1094HA">1094HA</option>';
+            Postcode6_options_str  += '<option value="1094HB">1094HB</option>';
+            Postcode6_options_str  += '<option value="1094HC">1094HC</option>';
+            Postcode6_options_str  += '<option value="1094HJ">1094HJ</option>';
+            Postcode6_options_str  += '<option value="1094HK">1094HK</option>';
+            Postcode6_options_str  += '<option value="1094HL">1094HL</option>';
+            Postcode6_options_str  += '<option value="1094HM">1094HM</option>';
+            Postcode6_options_str  += '<option value="1094HN">1094HN</option>';
+            Postcode6_options_str  += '<option value="1094HW">1094HW</option>';
+            Postcode6_options_str  += '<option value="1094JC">1094JC</option>';
+            Postcode6_options_str  += '<option value="1094JH">1094JH</option>';
+            Postcode6_options_str  += '<option value="1094ND">1094ND</option>';
+            Postcode6_options_str  += '<option value="1094NE">1094NE</option>';
+            Postcode6_options_str  += '<option value="1095AV">1095AV</option>';
+            Postcode6_options_str  += '<option value="1095AW">1095AW</option>';
+            Postcode6_options_str  += '<option value="1095TA">1095TA</option>';
+            Postcode6_options_str  += '<option value="1098AD">1098AD</option>';
+            Postcode6_options_str  += '<option value="1102BE">1102BE</option>';
+            Postcode6_options_str  += '<option value="1102BG">1102BG</option>';
+            Postcode6_options_str  += '<option value="1102DH">1102DH</option>';
+            Postcode6_options_str  += '<option value="1102DJ">1102DJ</option>';
+            Postcode6_options_str  += '<option value="1102DK">1102DK</option>';
+            Postcode6_options_str  += '<option value="1102DM">1102DM</option>';
+            Postcode6_options_str  += '<option value="1102DN">1102DN</option>';
+            Postcode6_options_str  += '<option value="1102DP">1102DP</option>';
+            Postcode6_options_str  += '<option value="1102DS">1102DS</option>';
+            Postcode6_options_str  += '<option value="1102DV">1102DV</option>';
+            Postcode6_options_str  += '<option value="1102DW">1102DW</option>';
+            sel_Postcode6.innerHTML = Postcode6_options_str;
+            div_Postcode6.appendChild(sel_Postcode6);
+            var lab_Postcode6 = document.createElement('div');
+            lab_Postcode6.innerHTML = 'Postcode6';
+            lab_Postcode6.className = 'filterlabel';
+            div_Postcode6.appendChild(lab_Postcode6);
+            var reset_Postcode6 = document.createElement('div');
+            reset_Postcode6.innerHTML = 'clear filter';
+            reset_Postcode6.className = 'filterlabel';
+            reset_Postcode6.onclick = function() {
+                var options = document.getElementById("sel_Postcode6").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Postcode6.appendChild(reset_Postcode6);
+        </script>
+    </body>
+</html>
